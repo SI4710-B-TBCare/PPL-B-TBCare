@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        Diagnosa penyakit
+        Prediksi TBC
     </x-slot>
 
     <x-slot name="head">
@@ -72,7 +72,7 @@
                         
                     @endforeach
                     <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">Diagnosa sekarang</button>
+                        <button type="submit" class="btn btn-primary">Prediksi sekarang</button>
                     </div>
                 </div>
             </form>
