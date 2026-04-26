@@ -19,7 +19,6 @@ class Monitoring extends Model
         'status'
     ];
 
-    // Relasi ke user (opsional tapi disarankan)
     public function user()
     {
         return $this->belongsTo(User::class);
