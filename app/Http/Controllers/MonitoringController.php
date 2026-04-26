@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers;
@@ -9,16 +8,22 @@ use Illuminate\Support\Facades\Auth;
 
 class MonitoringController extends Controller
 {
+
     public function index()
     {
-        $monitoring = Monitoring::where('user_id', Auth::id())->paginate(10);
+        $monitoring = Monitoring::where('user_id', Auth::id())
+                        ->orderBy('tanggal', 'desc')
+                        ->get();
+
         return view('monitoring.index', compact('monitoring'));
     }
 
+    // Form input
     public function create()
     {
         return view('monitoring.create');
     }
+
 
     public function store(Request $request)
     {
@@ -37,12 +42,15 @@ class MonitoringController extends Controller
             'status' => $request->status
         ]);
 
-        return redirect()->back()->with('success', 'Data hasil lab berhasil disimpan');
+        return redirect('/monitoring')->with('success', 'Data berhasil disimpan');
     }
 
+    // detail (opsional)
     public function show($id)
     {
-        $data = Monitoring::findOrFail($id);
+        $data = Monitoring::where('user_id', Auth::id())
+                    ->findOrFail($id);
+
         return view('monitoring.show', compact('data'));
     }
 
@@ -54,23 +62,11 @@ class MonitoringController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'tanggal' => 'required|date',
-            'hasil_lab' => 'required|string',
-            'keterangan' => 'nullable|string',
-            'status' => 'required|string'
-        ]);
-
         $data = Monitoring::findOrFail($id);
 
-        $data->update([
-            'tanggal' => $request->tanggal,
-            'hasil_lab' => $request->hasil_lab,
-            'keterangan' => $request->keterangan,
-            'status' => $request->status
-        ]);
+        $data->update($request->all());
 
-        return redirect()->back()->with('success', 'Data berhasil diupdate');
+        return redirect('/monitoring')->with('success', 'Data berhasil diupdate');
     }
 
     public function destroy($id)
@@ -78,6 +74,6 @@ class MonitoringController extends Controller
         $data = Monitoring::findOrFail($id);
         $data->delete();
 
-        return redirect()->back()->with('success', 'Data berhasil dihapus');
+        return redirect('/monitoring')->with('success', 'Data berhasil dihapus');
     }
 }
