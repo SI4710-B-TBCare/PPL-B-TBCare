@@ -20,7 +20,7 @@
     
     @can('diagnosa')    
     <x-nav-link 
-        text="Diagnosa" 
+        text="Prediksi TBC" 
         icon="stethoscope" 
         url="{{ route('admin.diagnosa') }}"
         active="{{ request()->routeIs('admin.diagnosa') ? ' active' : '' }}"
@@ -29,7 +29,7 @@
     
     @can('riwayat-list')
     <x-nav-link 
-        text="Riwayat Diagnosaaa" 
+        text="Riwayat Prediksi TBC" 
         icon="notes-medical" 
         url="{{ route('admin.riwayat.daftar') }}"
         active="{{ request()->routeIs('admin.riwayat.daftar') ? ' active' : '' }}"
