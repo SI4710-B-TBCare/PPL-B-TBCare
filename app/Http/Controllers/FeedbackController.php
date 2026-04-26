@@ -15,6 +15,13 @@ class FeedbackController extends Controller
          $this->middleware('permission:feedback-delete', ['only' => ['destroy']]);
     }
 
+    public function index()
+    {
+        $feedback = Feedback::paginate(10);
+
+        return view('admin.feedback.index', compact('feedback'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
