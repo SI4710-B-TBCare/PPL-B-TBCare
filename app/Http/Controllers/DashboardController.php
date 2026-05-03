@@ -34,7 +34,9 @@ class DashboardController extends Controller
         ->where('created_at', '>=', Carbon::now()->subDays(7))
         ->groupBy('days')->orderBy('created_at', 'asc')->get();
 
-        return view('admin.dashboard', compact('logs', 'riwayat'));
+        $riwayatList = Riwayat::latest()->limit(5)->get();
+
+        return view('admin.dashboard', compact('logs', 'riwayat', 'riwayatList'));
     }
 
     /**
