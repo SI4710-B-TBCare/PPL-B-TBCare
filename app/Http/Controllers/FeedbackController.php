@@ -57,4 +57,9 @@ class FeedbackController extends Controller
 
         return back()->with('success', 'Feedback berhasil diubah');
     }
+    public function destroy(Feedback $feedback)
+    {
+        $feedback->delete();
+        return back()->with('success', 'Feedback berhasil dihapus');
+    }
 }
