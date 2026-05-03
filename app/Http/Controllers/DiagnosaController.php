@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Barryvdh\DomPDF\Facade as PDF;
-use App\Models\{Artikel, FasilitasKesehatan, Rule, Riwayat};
+use App\Models\{Gejala, Penyakit, Riwayat};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
@@ -18,9 +18,9 @@ class DiagnosaController extends Controller
 
     public function index()
     {
-        $artikel = Artikel::all();
-
-        return view('admin.diagnosa', compact('artikel'));
+        $gejala = Gejala::all();
+        
+        return view('admin.diagnosa', compact('gejala'));
     }
 
     public function tingkat_keyakinan($keyakinan)
@@ -60,19 +60,26 @@ class DiagnosaController extends Controller
         foreach($data['diagnosa'] as $input) {
             if(!empty($input)) {
                 $opts = explode('+', $input);
-                $artikel = Artikel::with('fasilitasKesehatan')->find($opts[0]);
+                $gejala = Gejala::with('penyakits')->find($opts[0]);
                 
-                foreach($artikel->fasilitasKesehatan as $fasilitasKesehatan) {
-                    if(empty($data_penyakit[$fasilitasKesehatan->id])){
-                        $data_penyakit[$fasilitasKesehatan->id] = [$fasilitasKesehatan, [$artikel, $opts[1], $fasilitasKesehatan->pivot->value_cf]];
+                foreach ($gejala->penyakits as $penyakit) {
+
+                    if (empty($data_penyakit[$penyakit->id])) {
+                        $data_penyakit[$penyakit->id] = [
+                            $penyakit,
+                            [$gejala, $opts[1], $penyakit->pivot->value_cf]
+                        ];
                     } else {
-                        array_push($data_penyakit[$fasilitasKesehatan->id], [$artikel, $opts[1], $fasilitasKesehatan->pivot->value_cf]);
+                        array_push(
+                            $data_penyakit[$penyakit->id],
+                            [$gejala, $opts[1], $penyakit->pivot->value_cf]
+                        );
                     }
 
-                    if(empty($gejala_terpilih[$artikel->id])) {
-                        $gejala_terpilih[$artikel->id] = [
-                            'nama' => $artikel->nama,
-                            'kode' => $artikel->kode,
+                    if (empty($gejala_terpilih[$gejala->id])) {
+                        $gejala_terpilih[$gejala->id] = [
+                            'nama' => $gejala->nama,
+                            'kode' => $gejala->kode,
                             'cf_user' => $opts[1],
                             'keyakinan' => $this->tingkat_keyakinan($opts[1])
                         ];
