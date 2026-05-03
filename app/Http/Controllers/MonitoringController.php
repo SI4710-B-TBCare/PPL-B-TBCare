@@ -2,29 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Monitoring;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Monitoring;
 
 class MonitoringController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:monitoring-list', ['only' => ['index', 'history']]);
+        $this->middleware('permission:monitoring-create', ['only' => ['store']]);
+        $this->middleware('permission:monitoring-edit', ['only' => ['update', 'json']]);
+        $this->middleware('permission:monitoring-delete', ['only' => ['destroy']]);
+    }
 
+    // PBI 9 - Menampilkan hasil lab
     public function index()
     {
-        $monitoring = Monitoring::where('user_id', Auth::id())
-                        ->orderBy('tanggal', 'desc')
-                        ->get();
-
-        return view('monitoring.index', compact('monitoring'));
+        $monitoring = Monitoring::orderBy('tanggal', 'desc')->paginate(10);
+        return view('admin.monitoring.index', compact('monitoring'));
     }
 
-    // Form input
-    public function create()
+    // PBI 10 - Riwayat hasil lab
+    public function history()
     {
-        return view('monitoring.create');
+        $monitoring = Monitoring::orderBy('tanggal', 'asc')->get();
+        return view('admin.monitoring.history', compact('monitoring'));
     }
 
-
+    // PBI 8 - Input data hasil lab
     public function store(Request $request)
     {
         $request->validate([
@@ -34,46 +39,37 @@ class MonitoringController extends Controller
             'status' => 'required|string'
         ]);
 
-        Monitoring::create([
-            'user_id' => Auth::id(),
-            'tanggal' => $request->tanggal,
-            'hasil_lab' => $request->hasil_lab,
-            'keterangan' => $request->keterangan,
-            'status' => $request->status
+        Monitoring::create($request->all());
+
+        return back()->with('success', 'Data monitoring berhasil disimpan');
+    }
+
+    // Untuk ambil data (edit modal, dll)
+    public function json()
+    {
+        $data = Monitoring::find(request('id'));
+        return response()->json($data);
+    }
+
+    // Update data
+    public function update(Request $request)
+    {
+        $request->validate([
+            'tanggal' => 'required|date',
+            'hasil_lab' => 'required|string',
+            'keterangan' => 'nullable|string',
+            'status' => 'required|string'
         ]);
 
-        return redirect('/monitoring')->with('success', 'Data berhasil disimpan');
+        Monitoring::find($request->id)->update($request->all());
+
+        return back()->with('success', 'Data monitoring berhasil diubah');
     }
 
-    // detail (opsional)
-    public function show($id)
+    // Hapus data
+    public function destroy(Monitoring $monitoring)
     {
-        $data = Monitoring::where('user_id', Auth::id())
-                    ->findOrFail($id);
-
-        return view('monitoring.show', compact('data'));
-    }
-
-    public function edit($id)
-    {
-        $data = Monitoring::findOrFail($id);
-        return view('monitoring.edit', compact('data'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $data = Monitoring::findOrFail($id);
-
-        $data->update($request->all());
-
-        return redirect('/monitoring')->with('success', 'Data berhasil diupdate');
-    }
-
-    public function destroy($id)
-    {
-        $data = Monitoring::findOrFail($id);
-        $data->delete();
-
-        return redirect('/monitoring')->with('success', 'Data berhasil dihapus');
+        $monitoring->delete();
+        return back()->with('success', 'Data monitoring berhasil dihapus');
     }
 }
