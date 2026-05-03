@@ -30,10 +30,10 @@
                     <input type="text" class="form-control mb-3 w-50" name="nama">
                     @endrole
 
-                    <p>Pilih artikel yang sedang dirasakan.</p>
+                    <p>Pilih gejala yang sedang dirasakan.</p>
 
-                    <label for=""><b><i class="fas fa-th mr-1"></i> Artikel-artikel</b></label>
-                    @foreach($artikel as $key => $value)
+                    <label for=""><b><i class="fas fa-th mr-1"></i><label><b>Gejala</b></label></b></label>
+                    @foreach($gejala as $key => $value)
                         @php 
                         $mod = ($key + 1) % 2;
                         @endphp
@@ -66,7 +66,7 @@
                     </div>
                     @endif
 
-                    @if($key + 1 == \App\Models\Artikel::count() && $mod != 0)
+                    @if($key + 1 == \App\Models\Gejala::count() && $mod != 0)
                     </div>
                     @endif
                         
