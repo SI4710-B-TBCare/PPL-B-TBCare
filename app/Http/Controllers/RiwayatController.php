@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Riwayat;
+use App\Traits\RekomendasiTrait; // <-- tambah ini
 use Illuminate\Http\Request;
 
 class RiwayatController extends Controller
 {
+    use RekomendasiTrait; // <-- tambah ini
+
     function __construct()
     {
          $this->middleware('permission:riwayat-list', ['only' => ['index']]);
@@ -33,6 +36,9 @@ class RiwayatController extends Controller
     public function show(Riwayat $riwayat)
     {
         $this->authorize('show', $riwayat);
-        return view('admin.riwayat.show', compact('riwayat'));
+        $cfMax = unserialize($riwayat->cf_max);
+        $rekomendasi = $this->getRekomendasi((float) $cfMax[0]);
+
+        return view('admin.riwayat.show', compact('riwayat', 'rekomendasi'));
     }
 }
