@@ -36,4 +36,25 @@ class FeedbackController extends Controller
 
         return back()->with('success', 'Feedback berhasil disimpan');
     }
+    public function json()
+    {
+        $data = Feedback::find(request('id'));
+
+        return response()->json($data);
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'email' => 'required|email',
+            'pesan' => 'required'
+        ]);
+
+        $data = $request->all();
+
+        Feedback::find($request->id)->update($data);
+
+        return back()->with('success', 'Feedback berhasil diubah');
+    }
 }
