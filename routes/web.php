@@ -15,6 +15,9 @@ use App\Http\Controllers\{
 
 Route::redirect('/', '/login');
 
+// Halaman publik artikel (tidak perlu login)
+Route::get('/artikel/{id}', [ArtikelController::class, 'show'])->name('artikel.show');
+
 Route::group([
 	'middleware' => 'auth',
 	'prefix' => 'panel',
@@ -49,7 +52,7 @@ Route::group([
 	Route::post('/fasilitasKesehatan/{fasilitasKesehatan}/destroy', [FasilitasKesehatanController::class, 'destroy'])->name('fasilitasKesehatan.destroy');
 
 	// menu artikel
-	Route::get('/artikel/generate-kode', [ArtikelController::class, 'generateKodeJson'])->name('artikel.generate-kode'); // ← TAMBAHAN (harus di atas route /artikel/{artikel})
+	Route::get('/artikel/generate-kode', [ArtikelController::class, 'generateKodeJson'])->name('artikel.generate-kode');
 	Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 	Route::post('/artikel', [ArtikelController::class, 'store'])->name('artikel.store');
 	Route::get('/artikel/json', [ArtikelController::class, 'json'])->name('artikel.json');
@@ -77,16 +80,9 @@ Route::group([
 	// Profile menu
 	Route::view('/profile', 'admin.profile')->name('profile');
 	Route::post('/profile', [DashboardController::class, 'profile_update'])->name('profile');
-	Route::post('/profile/upload', [DashboardController::class, 'upload_avatar'])
-		->name('profile.upload');
+	Route::post('/profile/upload', [DashboardController::class, 'upload_avatar'])->name('profile.upload');
 
-	Route::get('/tes', function() {
-	})->name('test');
+	Route::get('/tes', function() {})->name('test');
+});
 
-	// Halaman publik artikel
-	Route::get('/artikel/{id}', [ArtikelController::class, 'show'])->name('artikel.show');
-
-});			
-
-require __DIR__.'/auth.php';	
-		
+require __DIR__.'/auth.php';
