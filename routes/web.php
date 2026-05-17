@@ -83,6 +83,9 @@ Route::group([
 	Route::get('/tes', function() {
 	})->name('test');
 
+	// Halaman publik artikel
+	Route::get('/artikel/{id}', [ArtikelController::class, 'show'])->name('artikel.show');
+
 });			
 
 require __DIR__.'/auth.php';	

@@ -35,7 +35,11 @@
 					<td>{{ $row->nama }}</td>
 					<td>
 						<div class="d-flex">
-							<button class="btn btn-primary btn-sm edit" data-id="{{ $row->id }}">
+							<a href="{{ route('artikel.show', $row->id) }}"
+							   class="btn btn-info btn-sm" target="_blank">
+								<i class="fas fa-eye"></i>
+							</a>
+							<button class="btn btn-primary btn-sm edit ml-1" data-id="{{ $row->id }}">
 								<i class="fas fa-edit"></i>
 							</button>
 							<form action="{{ route('admin.artikel.destroy', $row->id) }}" method="post" class="ml-1">

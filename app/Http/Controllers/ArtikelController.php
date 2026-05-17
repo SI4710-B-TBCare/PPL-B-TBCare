@@ -124,4 +124,10 @@ class ArtikelController extends Controller
 
         return back()->with('success', 'Data artikel berhasil dihapus');
     }
+
+    public function show($id)
+    {
+        $artikel = Artikel::findOrFail($id);
+        return view('artikel.show', compact('artikel'));
+    }
 }
