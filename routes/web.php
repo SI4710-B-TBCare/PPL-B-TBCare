@@ -48,21 +48,22 @@ Route::group([
 	Route::post('/fasilitasKesehatan/update', [FasilitasKesehatanController::class, 'update'])->name('fasilitasKesehatan.update');
 	Route::post('/fasilitasKesehatan/{fasilitasKesehatan}/destroy', [FasilitasKesehatanController::class, 'destroy'])->name('fasilitasKesehatan.destroy');
 
-	// menu gejala -> artikel
-	Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel');
+	// menu artikel
+	Route::get('/artikel/generate-kode', [ArtikelController::class, 'generateKodeJson'])->name('artikel.generate-kode'); // ← TAMBAHAN (harus di atas route /artikel/{artikel})
+	Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 	Route::post('/artikel', [ArtikelController::class, 'store'])->name('artikel.store');
 	Route::get('/artikel/json', [ArtikelController::class, 'json'])->name('artikel.json');
 	Route::post('/artikel/update', [ArtikelController::class, 'update'])->name('artikel.update');
 	Route::post('/artikel/{artikel}/destroy', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
 
-	// menu feedback (new)
+	// menu feedback
 	Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback');
 	Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 	Route::get('/feedback/json', [FeedbackController::class, 'json'])->name('feedback.json');
 	Route::post('/feedback/update', [FeedbackController::class, 'update'])->name('feedback.update');
 	Route::post('/feedback/{feedback}/destroy', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
 
-	// menu monitoring (new)
+	// menu monitoring
 	Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
 	Route::post('/monitoring', [MonitoringController::class, 'store'])->name('monitoring.store');
 	Route::get('/monitoring/json', [MonitoringController::class, 'json'])->name('monitoring.json');
@@ -72,8 +73,7 @@ Route::group([
 	// menu rules
 	Route::get('/rules/{id}', [RuleController::class, 'index'])->name('rules');
 	Route::post('/rules/{id}/update', [RuleController::class, 'update'])->name('rules.update');
-	
-	
+
 	// Profile menu
 	Route::view('/profile', 'admin.profile')->name('profile');
 	Route::post('/profile', [DashboardController::class, 'profile_update'])->name('profile');
@@ -83,7 +83,7 @@ Route::group([
 	Route::get('/tes', function() {
 	})->name('test');
 
-});
+});			
 
-
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';	
+		

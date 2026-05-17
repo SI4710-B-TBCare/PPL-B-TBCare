@@ -60,8 +60,8 @@
     <x-nav-link 
         text="Daftar Artikel" 
         icon="th-list" 
-        url="{{ route('admin.artikel') }}"
-        active="{{ request()->routeIs('admin.artikel') ? ' active' : '' }}"
+        url="{{ route('admin.artikel.index') }}"
+        active="{{ request()->routeIs('admin.artikel.index') ? ' active' : '' }}"
     />
     @endcan
 
