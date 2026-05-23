@@ -12,12 +12,15 @@ class Artikel extends Model
 
     protected $fillable = [
         'nama',
-        'kode'
+        'kode',
+        'kategori',
+        'gambar',
+        'isi'
     ];
 
     public $timestamps = false;
 
-    protected static $logAttributes = ['nama', 'kode'];
+    protected static $logAttributes = ['nama', 'kode', 'kategori', 'gambar', 'isi'];
 
     protected static $igonoreChangedAttributes = ['updated_at'];
 

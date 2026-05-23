@@ -18,18 +18,25 @@ class ArtikelController extends Controller
 
     public function index(Request $request)
     {
-        $search = $request->input('search');
+        $search   = $request->input('search');
+        $kategori = $request->input('kategori');
+
+        $kategoris = ['Pencegahan', 'Pengobatan', 'Gejala', 'Umum'];
 
         $artikel = Artikel::when($search, function ($query, $search) {
                 $query->where('nama', 'like', '%' . $search . '%')
                     ->orWhere('kode', 'like', '%' . $search . '%');
             })
+            ->when($kategori, function ($query, $kategori) {
+                $query->where('kategori', $kategori);
+            })
             ->paginate(10);
 
-        $artikel->appends(['search' => $search]);
+        $artikel->appends(['search' => $search, 'kategori' => $kategori]);
 
-        return view('admin.artikel.index', compact('artikel', 'search'));
+        return view('admin.artikel.index', compact('artikel', 'search', 'kategori', 'kategoris'));
     }
+
     /**
      * Generate kode otomatis: ART-001, ART-002, dst
      */
@@ -60,6 +67,7 @@ class ArtikelController extends Controller
     {
         $request->validate([
             'nama'   => 'required|string|max:255',
+            'kategori' => 'required|string',
             'isi'    => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -74,6 +82,7 @@ class ArtikelController extends Controller
             $artikel->kode   = $this->generateKode();
             $artikel->nama   = $request->nama;
             $artikel->isi    = $request->isi;
+            $artikel->kategori = $request->kategori;
             $artikel->gambar = $gambarPath;
             $artikel->save();
         });
@@ -94,6 +103,7 @@ class ArtikelController extends Controller
             'id'     => 'required|exists:artikels,id',
             'kode'   => 'required|string|max:50',
             'nama'   => 'required|string|max:255',
+            'kategori' => 'required|string',
             'isi'    => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -113,6 +123,7 @@ class ArtikelController extends Controller
             $artikel->kode   = $request->kode;
             $artikel->nama   = $request->nama;
             $artikel->isi    = $request->isi;
+            $artikel->kategori = $request->kategori;
             $artikel->gambar = $gambarPath;
             $artikel->save();
         });

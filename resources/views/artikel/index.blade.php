@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Artikel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body { background-color: #f8f9fa; }
         .artikel-card {
@@ -33,6 +34,25 @@
         .card-body { padding: 16px; }
         .card-title { font-weight: 700; font-size: 1rem; }
         .card-text { font-size: 0.85rem; color: #6c757d; }
+        .filter-btn {
+            cursor: pointer;
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.85rem;
+            border: 1px solid #dee2e6;
+            background: #fff;
+            margin-right: 6px;
+            margin-bottom: 8px;
+            display: inline-block;
+            text-decoration: none;
+            color: #495057;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -40,8 +60,9 @@
         <h3 class="mb-4 font-weight-bold">Daftar Artikel TBCare</h3>
 
         {{-- Search --}}
-        <form method="GET" action="{{ route('artikel.public.index') }}" class="mb-4">
+        <form method="GET" action="{{ route('artikel.public.index') }}" class="mb-3">
             <div class="input-group">
+                <input type="hidden" name="kategori" value="{{ $kategori ?? '' }}">
                 <input type="text" class="form-control" name="search"
                        placeholder="Cari artikel..."
                        value="{{ $search ?? '' }}">
@@ -49,14 +70,28 @@
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-search"></i> Cari
                     </button>
-                    @if($search)
+                    @if($search || $kategori)
                         <a href="{{ route('artikel.public.index') }}" class="btn btn-secondary">
-                            Reset
+                            <i class="fas fa-times"></i> Reset
                         </a>
                     @endif
                 </div>
             </div>
         </form>
+
+        {{-- Filter Kategori --}}
+        <div class="mb-4">
+            <a href="{{ route('artikel.public.index', ['search' => $search ?? '']) }}"
+               class="filter-btn {{ !$kategori ? 'active' : '' }}">
+                Semua
+            </a>
+            @foreach(['Pencegahan', 'Pengobatan', 'Gejala', 'Umum'] as $kat)
+                <a href="{{ route('artikel.public.index', ['search' => $search ?? '', 'kategori' => $kat]) }}"
+                   class="filter-btn {{ ($kategori ?? '') == $kat ? 'active' : '' }}">
+                    {{ $kat }}
+                </a>
+            @endforeach
+        </div>
 
         {{-- Hasil --}}
         @if($artikel->isEmpty())
@@ -74,6 +109,9 @@
                             </div>
                         @endif
                         <div class="card-body">
+                            @if($row->kategori)
+                                <span class="badge badge-info mb-1">{{ $row->kategori }}</span>
+                            @endif
                             <h5 class="card-title">{{ $row->nama }}</h5>
                             <p class="card-text">
                                 {{ Str::limit($row->isi, 80, '...') }}
@@ -92,7 +130,5 @@
             </div>
         @endif
     </div>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>

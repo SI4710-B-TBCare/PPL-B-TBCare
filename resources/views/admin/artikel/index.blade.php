@@ -11,29 +11,48 @@
 				<i class="fas fa-plus mr-1"></i> Tambahkan Artikel
 			</div>
 		</x-slot>
-		{{-- Search --}}
+
+		{{-- Search & Filter --}}
 		<form method="GET" action="{{ route('admin.artikel.index') }}" class="mb-3">
-			<div class="input-group">
-				<input type="text" class="form-control" name="search"
-					placeholder="Cari nama atau kode artikel..."
-					value="{{ $search ?? '' }}">
-				<div class="input-group-append">
-					<button class="btn btn-primary" type="submit">
-						<i class="fas fa-search"></i> Cari
-					</button>
-					@if($search)
-						<a href="{{ route('admin.artikel.index') }}" class="btn btn-secondary">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="input-group">
+						<input type="text" class="form-control" name="search"
+							placeholder="Cari nama atau kode artikel..."
+							value="{{ $search ?? '' }}">
+						<div class="input-group-append">
+							<button class="btn btn-primary" type="submit">
+								<i class="fas fa-search"></i> Cari
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<select class="form-control" name="kategori" onchange="this.form.submit()">
+						<option value="">-- Semua Kategori --</option>
+						@foreach($kategoris as $kat)
+							<option value="{{ $kat }}" {{ ($kategori ?? '') == $kat ? 'selected' : '' }}>
+								{{ $kat }}
+							</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col-md-2">
+					@if($search || $kategori)
+						<a href="{{ route('admin.artikel.index') }}" class="btn btn-secondary btn-block">
 							<i class="fas fa-times"></i> Reset
 						</a>
 					@endif
 				</div>
 			</div>
 		</form>
+
 		<table class="table table-hover border">
 			<thead>
 				<th>Kode</th>
 				<th>Gambar</th>
 				<th>Nama Artikel</th>
+				<th>Kategori</th>
 				<th></th>
 			</thead>
 			<tbody>
@@ -50,6 +69,13 @@
 						@endif
 					</td>
 					<td>{{ $row->nama }}</td>
+					<td>
+						@if($row->kategori)
+							<span class="badge badge-info">{{ $row->kategori }}</span>
+						@else
+							<span class="text-muted">-</span>
+						@endif
+					</td>
 					<td>
 						<div class="d-flex">
 							<a href="{{ route('artikel.show', $row->id) }}"
@@ -70,7 +96,7 @@
 				</tr>
 				@empty
 				<tr>
-					<td colspan="4" class="text-center">No Data</td>
+					<td colspan="5" class="text-center">No Data</td>
 				</tr>
 				@endforelse
 			</tbody>
@@ -99,6 +125,15 @@
 						<input type="text" class="form-control" name="nama">
 					</div>
 				</div>
+			</div>
+			<div class="form-group">
+				<label>Kategori</label>
+				<select class="form-control" name="kategori">
+					<option value="">-- Pilih Kategori --</option>
+					@foreach($kategoris as $kat)
+						<option value="{{ $kat }}">{{ $kat }}</option>
+					@endforeach
+				</select>
 			</div>
 			<div class="form-group">
 				<label>Gambar Artikel</label>
@@ -138,8 +173,16 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label>Kategori</label>
+				<select class="form-control" name="kategori" id="edit-kategori">
+					<option value="">-- Pilih Kategori --</option>
+					@foreach($kategoris as $kat)
+						<option value="{{ $kat }}">{{ $kat }}</option>
+					@endforeach
+				</select>
+			</div>
+			<div class="form-group">
 				<label>Gambar Artikel</label>
-				{{-- Preview gambar existing --}}
 				<div class="mb-2">
 					<img id="edit-gambar-existing" src="" alt="Gambar Saat Ini"
 						style="max-width:200px; max-height:150px; object-fit:cover; border-radius:6px; border:1px solid #ddd; display:none;">
@@ -148,7 +191,6 @@
 					</p>
 				</div>
 				<input type="file" class="form-control-file" name="gambar" accept="image/*" id="edit-gambar-preview-input">
-				{{-- Preview gambar baru --}}
 				<div class="mt-2" id="edit-gambar-preview-wrapper" style="display:none;">
 					<img id="edit-gambar-preview" src="" alt="Preview Baru"
 						style="max-width:200px; max-height:150px; object-fit:cover; border-radius:6px; border:1px solid #ddd;">
@@ -172,12 +214,11 @@
 				$.get('{{ route('admin.artikel.generate-kode') }}', function (res) {
 					$('#kode-generate').val(res.kode)
 				})
-				// Reset form & preview
 				$('#artikel input[name="nama"]').val('')
+				$('#artikel select[name="kategori"]').val('')
 				$('#artikel textarea[name="isi"]').val('')
 				$('#artikel input[name="gambar"]').val('')
 				$('#gambar-preview-wrapper').hide()
-
 				$('#artikel').modal('show')
 			})
 
@@ -223,8 +264,8 @@
 					$('#edit-artikel input[name="kode"]').val(res.kode)
 					$('#edit-artikel input[name="nama"]').val(res.nama)
 					$('#edit-artikel textarea[name="isi"]').val(res.isi)
+					$('#edit-kategori').val(res.kategori)
 
-					// Tampilkan gambar existing jika ada
 					if (res.gambar) {
 						$('#edit-gambar-existing').attr('src', '/storage/' + res.gambar).show()
 						$('#edit-gambar-existing-label').show()
@@ -233,7 +274,6 @@
 						$('#edit-gambar-existing-label').hide()
 					}
 
-					// Reset preview gambar baru
 					$('#edit-gambar-preview-wrapper').hide()
 					$('#edit-gambar-preview-input').val('')
 
