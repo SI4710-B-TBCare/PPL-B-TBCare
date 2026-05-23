@@ -16,13 +16,20 @@ class ArtikelController extends Controller
         $this->middleware('permission:artikel-delete', ['only' => ['destroy']]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $artikel = Artikel::paginate(10);
+        $search = $request->input('search');
 
-        return view('admin.artikel.index', compact('artikel'));
+        $artikel = Artikel::when($search, function ($query, $search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('kode', 'like', '%' . $search . '%');
+            })
+            ->paginate(10);
+
+        $artikel->appends(['search' => $search]);
+
+        return view('admin.artikel.index', compact('artikel', 'search'));
     }
-
     /**
      * Generate kode otomatis: ART-001, ART-002, dst
      */

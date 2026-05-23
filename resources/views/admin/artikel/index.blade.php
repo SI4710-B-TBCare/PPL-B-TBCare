@@ -11,7 +11,24 @@
 				<i class="fas fa-plus mr-1"></i> Tambahkan Artikel
 			</div>
 		</x-slot>
-
+		{{-- Search --}}
+		<form method="GET" action="{{ route('admin.artikel.index') }}" class="mb-3">
+			<div class="input-group">
+				<input type="text" class="form-control" name="search"
+					placeholder="Cari nama atau kode artikel..."
+					value="{{ $search ?? '' }}">
+				<div class="input-group-append">
+					<button class="btn btn-primary" type="submit">
+						<i class="fas fa-search"></i> Cari
+					</button>
+					@if($search)
+						<a href="{{ route('admin.artikel.index') }}" class="btn btn-secondary">
+							<i class="fas fa-times"></i> Reset
+						</a>
+					@endif
+				</div>
+			</div>
+		</form>
 		<table class="table table-hover border">
 			<thead>
 				<th>Kode</th>

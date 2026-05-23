@@ -2,21 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-	DashboardController,
-	DiagnosaController,
-	RiwayatController, 
-	ArtikelController,
-	FasilitasKesehatanController,
-	FeedbackController,
-	MonitoringController,
-	RuleController,
-	UserController
+    DashboardController,
+    DiagnosaController,
+    RiwayatController, 
+    ArtikelController,
+    PublicArtikelController,
+    FasilitasKesehatanController,
+    FeedbackController,
+    MonitoringController,
+    RuleController,
+    UserController
 };
 
 Route::redirect('/', '/login');
 
 // Halaman publik artikel (tidak perlu login)
-Route::get('/artikel/{id}', [ArtikelController::class, 'show'])->name('artikel.show');
+Route::get('/artikel', [PublicArtikelController::class, 'index'])->name('artikel.public.index');
+Route::get('/artikel/{id}', [PublicArtikelController::class, 'show'])->name('artikel.show');
 
 Route::group([
 	'middleware' => 'auth',
