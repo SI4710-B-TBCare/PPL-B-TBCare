@@ -33,8 +33,8 @@ class MonitoringController extends Controller
             'tanggal' => $request->tanggal,
             'hasil_lab' => $request->hasil_lab,
             'keterangan' => $request->keterangan,
-            'status' => $request->status
-        ]);
+            'status' => $request->status 
+        ]);#s
 
         return redirect()->back()->with('success', 'Data hasil lab berhasil disimpan');
     }
