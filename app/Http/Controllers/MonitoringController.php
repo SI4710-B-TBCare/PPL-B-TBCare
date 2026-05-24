@@ -34,7 +34,7 @@ class MonitoringController extends Controller
             'hasil_lab' => $request->hasil_lab,
             'keterangan' => $request->keterangan,
             'status' => $request->status 
-        ]);#s
+        ]);#s#J
 
         return redirect()->back()->with('success', 'Data hasil lab berhasil disimpan');
     }
