@@ -97,7 +97,7 @@ class ArtikelController extends Controller
         return response()->json($data);
     }
 
-    public function update(Request $request)
+    public function update(Request $request)#s
     {
         $request->validate([
             'id'     => 'required|exists:artikels,id',
