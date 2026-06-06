@@ -29,10 +29,11 @@ class DashboardController extends Controller
         $logs = Activity::where('causer_id', auth()->id())->latest()->paginate(5);
         $riwayat = Riwayat::select(
             DB::raw("COUNT(id) as total"),
-            DB::raw("DATE_FORMAT(created_at, '%d %M') as days")
+            DB::raw("DATE_FORMAT(created_at, '%d %M') as days"),
+            DB::raw("MIN(created_at) as min_date")
         )
         ->where('created_at', '>=', Carbon::now()->subDays(7))
-        ->groupBy('days')->orderBy('created_at', 'asc')->get();
+        ->groupBy('days')->orderBy('min_date', 'asc')->get();
 
         $riwayatList = Riwayat::latest()->limit(5)->get();
 
