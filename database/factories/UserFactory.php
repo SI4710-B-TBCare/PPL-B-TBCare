@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class UserFactory extends Factory
 {
@@ -31,9 +32,14 @@ class UserFactory extends Factory
     }
 
     public function configure()
-    {
+{
         return $this->afterCreating(function(User $user) {
-            $user->assignRole(2);
+
+            // 🔥 pastikan role ada
+            $role = Role::firstOrCreate(['name' => 'Admin']);
+
+            // 🔥 assign pakai NAMA, bukan ID
+            $user->assignRole($role);
         });
     }
 
