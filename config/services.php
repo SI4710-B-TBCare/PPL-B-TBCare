@@ -34,4 +34,8 @@ return [
         'url' => env('TB_API_URL', 'http://localhost:5000'),
     ],
 
+    'groq' => [
+        'key' => env('GROQ_API_KEY', ''),
+    ],
+
 ];

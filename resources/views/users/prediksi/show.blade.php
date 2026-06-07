@@ -36,6 +36,9 @@
                     <a href="{{ route('users.prediksi.index') }}" class="btn btn-secondary mr-2">
                         <i class="fas fa-history mr-1"></i> Riwayat Saya
                     </a>
+                    <a href="{{ route('users.chatbot.prediksi', $tbPrediction->id) }}" class="btn btn-success mr-2">
+                        <i class="fas fa-robot mr-1"></i> Tanya AI tentang Hasil Ini
+                    </a>
                     <a href="{{ route('users.prediksi.create') }}" class="btn btn-primary">
                         <i class="fas fa-redo mr-1"></i> Prediksi Ulang
                     </a>

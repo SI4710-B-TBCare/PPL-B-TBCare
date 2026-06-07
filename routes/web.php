@@ -11,7 +11,8 @@ use App\Http\Controllers\{
     MonitoringController,
     RuleController,
     UserController,
-    TbPredictionController
+    TbPredictionController,
+    ChatbotController
 };
 
 Route::redirect('/', '/login');
@@ -105,6 +106,12 @@ Route::group([
     Route::get('/prediksi/create',        [TbPredictionController::class, 'create'])->name('prediksi.create');
     Route::post('/prediksi',              [TbPredictionController::class, 'store'])->name('prediksi.store');
     Route::get('/prediksi/{tbPrediction}',[TbPredictionController::class, 'show'])->name('prediksi.show');
+
+    // ChatBot TBC
+    Route::get('/chatbot',                [ChatbotController::class, 'index'])->name('chatbot');
+    Route::get('/chatbot/{predictionId}', [ChatbotController::class, 'index'])->name('chatbot.prediksi');
+    Route::post('/chatbot/send',          [ChatbotController::class, 'send'])->name('chatbot.send');
+    Route::post('/chatbot/reset',         [ChatbotController::class, 'reset'])->name('chatbot.reset');
 });
 
 

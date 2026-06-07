@@ -45,9 +45,11 @@
                                         <small class="text-muted ml-1">{{ $row->risk_percentage }}%</small>
                                     </td>
                                     <td>
-                                        {{-- Link menggunakan route name baru --}}
-                                        <a href="{{ route('users.prediksi.show', $row->id) }}" class="btn btn-info btn-sm">
+                                        <a href="{{ route('users.prediksi.show', $row->id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('users.chatbot.prediksi', $row->id) }}" class="btn btn-success btn-sm ml-1" title="Tanya AI tentang hasil ini">
+                                            <i class="fas fa-robot"></i>
                                         </a>
                                     </td>
                                 </tr>

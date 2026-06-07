@@ -44,6 +44,12 @@
         url="{{ route('users.prediksi.index') }}"
         active="{{ request()->routeIs('users.prediksi.index', 'users.prediksi.show') ? ' active' : '' }}"
     />
+    <x-nav-link
+        text="ChatBot TBC"
+        icon="robot"
+        url="{{ route('users.chatbot') }}"
+        active="{{ request()->routeIs('users.chatbot', 'users.chatbot.prediksi', 'users.chatbot.send', 'users.chatbot.reset') ? ' active' : '' }}"
+    />
     @endrole
 
     {{-- Menu untuk role ADMIN: log aktivitas prediksi ML --}}
