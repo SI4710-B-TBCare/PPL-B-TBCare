@@ -1,28 +1,45 @@
-
 <?php
 
 namespace App\Http\Controllers;
 
-use App\Models\Monitoring;
 use Illuminate\Http\Request;
+use App\Models\Monitoring;
 use Illuminate\Support\Facades\Auth;
 
 class MonitoringController extends Controller
 {
-    public function index()
+    function __construct()
     {
-        $monitoring = Monitoring::where('user_id', Auth::id())->paginate(10);
-        return view('monitoring.index', compact('monitoring'));
+        $this->middleware('permission:monitoring-list', ['only' => ['index', 'history']]);
+        $this->middleware('permission:monitoring-create', ['only' => ['store']]);
+        $this->middleware('permission:monitoring-edit', ['only' => ['update', 'json']]);
+        $this->middleware('permission:monitoring-delete', ['only' => ['destroy']]);
     }
 
-    public function create()
+
+    public function index()
     {
-        return view('monitoring.create');
+        $monitoring = Monitoring::where('user_id', Auth::id())
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
+        return view('admin.monitoring.index', compact('monitoring'));
+    }
+
+
+    public function history()
+    {
+        $monitoring = Monitoring::where('user_id', Auth::id())
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        return view('admin.monitoring.history', compact('monitoring'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'nama' => 'required|string',
             'tanggal' => 'required|date',
             'hasil_lab' => 'required|string',
             'keterangan' => 'nullable|string',
@@ -30,29 +47,29 @@ class MonitoringController extends Controller
         ]);
 
         Monitoring::create([
-            'user_id' => Auth::id(),
+            'user_id' => auth()->id(),
+            'nama' => $request->nama, 
             'tanggal' => $request->tanggal,
             'hasil_lab' => $request->hasil_lab,
             'keterangan' => $request->keterangan,
             'status' => $request->status
         ]);
 
-        return redirect()->back()->with('success', 'Data hasil lab berhasil disimpan');
+        return back()->with('success', 'Data monitoring berhasil disimpan');
     }
+    
 
-    public function show($id)
+    public function json()
     {
-        $data = Monitoring::findOrFail($id);
-        return view('monitoring.show', compact('data'));
+        $data = Monitoring::where('id', request('id'))
+            ->where('user_id', Auth::id())
+            ->first();
+
+        return response()->json($data);
     }
 
-    public function edit($id)
-    {
-        $data = Monitoring::findOrFail($id);
-        return view('monitoring.edit', compact('data'));
-    }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $request->validate([
             'tanggal' => 'required|date',
@@ -61,23 +78,25 @@ class MonitoringController extends Controller
             'status' => 'required|string'
         ]);
 
-        $data = Monitoring::findOrFail($id);
+        Monitoring::where('id', $request->id)
+            ->where('user_id', Auth::id())
+            ->update([
+                'tanggal' => $request->tanggal,
+                'hasil_lab' => $request->hasil_lab,
+                'keterangan' => $request->keterangan,
+                'status' => $request->status
+            ]);
 
-        $data->update([
-            'tanggal' => $request->tanggal,
-            'hasil_lab' => $request->hasil_lab,
-            'keterangan' => $request->keterangan,
-            'status' => $request->status
-        ]);
-
-        return redirect()->back()->with('success', 'Data berhasil diupdate');
+        return back()->with('success', 'Data monitoring berhasil diubah');
     }
 
-    public function destroy($id)
-    {
-        $data = Monitoring::findOrFail($id);
-        $data->delete();
 
-        return redirect()->back()->with('success', 'Data berhasil dihapus');
+    public function destroy(Monitoring $monitoring)
+    {
+        if ($monitoring->user_id == Auth::id()) {
+            $monitoring->delete();
+        }
+
+        return back()->with('success', 'Data monitoring berhasil dihapus');
     }
 }
