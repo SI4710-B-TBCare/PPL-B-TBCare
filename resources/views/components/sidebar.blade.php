@@ -22,7 +22,11 @@
     {{--
     @can('diagnosa')    
     <x-nav-link 
+<<<<<<< HEAD
         text="Prediksi TBC (Admin)" 
+=======
+        text="Diagnosa" 
+>>>>>>> main
         icon="stethoscope" 
         url="{{ route('admin.diagnosa') }}"
         active="{{ request()->routeIs('admin.diagnosa') ? ' active' : '' }}"
@@ -64,7 +68,11 @@
     
     <!-- @can('riwayat-list')
     <x-nav-link 
+<<<<<<< HEAD
         text="Riwayat Diagnosa" 
+=======
+        text="Riwayat Diagnosaaa" 
+>>>>>>> main
         icon="notes-medical" 
         url="{{ route('admin.riwayat.daftar') }}"
         active="{{ request()->routeIs('admin.riwayat.daftar') ? ' active' : '' }}"
