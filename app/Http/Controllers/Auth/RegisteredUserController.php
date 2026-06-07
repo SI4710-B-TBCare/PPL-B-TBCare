@@ -50,6 +50,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::DIAGNOSA);
+        return redirect(RouteServiceProvider::USER_HOME);
     }
 }
