@@ -23,7 +23,7 @@ class DiagnosaController extends Controller
     {
         $gejala = Gejala::all();
         
-        return view('admin.diagnosa', compact('gejala'));
+        return view('admin.diagnosa.index', compact('gejala'));
     }
 
     public function tingkat_keyakinan($keyakinan)

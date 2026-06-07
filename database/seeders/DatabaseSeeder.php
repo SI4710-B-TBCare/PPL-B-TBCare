@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             GejalaPenyakitSeeder::class,
             CreateFeedbackSeeder::class,
             CreateMonitoringSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
