@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-user-app-layout>
     <x-slot name="title">
         Dashboard
     </x-slot>
@@ -109,4 +109,4 @@
             });
         </script>
     </x-slot>
-</x-app-layout>
+</x-user-app-layout>

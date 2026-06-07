@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             CreateFeedbackSeeder::class,
             CreateMonitoringSeeder::class,
             UserSeeder::class,
+            CreateRiwayatSeeder::class,
         ]);
     }
 }

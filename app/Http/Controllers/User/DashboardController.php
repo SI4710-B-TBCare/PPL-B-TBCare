@@ -13,22 +13,19 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // PBI #3 - Riwayat Kuesioner
         $riwayatList = Riwayat::where('user_id', $user->id)
             ->latest()
             ->take(5)
             ->get();
 
-        // PBI #1 - Data Grafik Perkembangan TBC
         $grafik = Riwayat::where('user_id', $user->id)
             ->selectRaw('DATE(created_at) as tanggal, count(*) as total')
             ->groupBy('tanggal')
             ->orderBy('tanggal')
             ->get();
 
-        // PBI #2 - Artikel Terbaru
-        $artikels = Artikel::latest()->take(5)->get();
+        $artikels = Artikel::take(5)->get();
 
-        return view('user.dashboard', compact('user', 'riwayatList', 'grafik', 'artikels'));
+        return view('users.Dashboard.dashboard', compact('user', 'riwayatList', 'grafik', 'artikels'));
     }
 }

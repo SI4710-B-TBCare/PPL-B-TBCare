@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-user-app-layout>
     <x-slot name="title">Hasil Prediksi TBC</x-slot>
 
     <section class="row">
@@ -45,4 +45,4 @@
         </div>
     </section>
 
-</x-app-layout>
+</x-user-app-layout>
