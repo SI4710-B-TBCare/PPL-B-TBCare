@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Monitoring extends Model
 {
@@ -13,6 +14,7 @@ class Monitoring extends Model
 
     protected $fillable = [
         'user_id',
+        'nama',
         'tanggal',
         'hasil_lab',
         'keterangan',

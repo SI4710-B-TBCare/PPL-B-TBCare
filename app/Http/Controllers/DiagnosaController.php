@@ -7,9 +7,12 @@ use App\Models\{Gejala, Penyakit, Riwayat};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use App\Traits\RekomendasiTrait;
 
 class DiagnosaController extends Controller
 {
+    use RekomendasiTrait;
+
     function __construct()
     {
          $this->middleware('permission:diagnosa', ['only' => ['index']]);
@@ -20,7 +23,7 @@ class DiagnosaController extends Controller
     {
         $gejala = Gejala::all();
         
-        return view('admin.diagnosa', compact('gejala'));
+        return view('admin.diagnosa.index', compact('gejala'));
     }
 
     public function tingkat_keyakinan($keyakinan)
@@ -187,41 +190,40 @@ class DiagnosaController extends Controller
     public function diagnosa(Request $request)
     {
         $name = auth()->user()->name;
-         
+        
         if(auth()->user()->hasRole('Admin')) {
             $request->validate(['nama' => 'required|string|max:100']);
             $name = $request->nama;
         }
 
         $data = $request->all();
-
         $result = $this->kalkulasi_cf($data);
 
         if($result['cf_max'] == null) {
             return back()->withErrors(['Terjadi sebuah kesalahan']);
         }
 
+        // Hanya satu kali create
         $riwayat = Riwayat::create([
-            'nama' => $name,
-            'hasil_diagnosa' => serialize($result['hasil_diagnosa']),
-            'cf_max' => serialize($result['cf_max']),
+            'nama'            => $name,
+            'hasil_diagnosa'  => serialize($result['hasil_diagnosa']),
+            'cf_max'          => serialize($result['cf_max']),
             'gejala_terpilih' => serialize($result['gejala_terpilih']),
-            'user_id' => auth()->id()
+            'user_id'         => auth()->id()
         ]);
 
         $path = public_path('storage/downloads');
-
         if(!File::isDirectory($path)){
             File::makeDirectory($path, 0777, true, true);
         }
 
         $file_pdf = 'Diagnosa-'.$name.'-'.time().'.pdf';
-
         PDF::loadView('pdf.riwayat', ['id' => $riwayat->id])
             ->save($path."/".$file_pdf);
 
         $riwayat->update(['file_pdf' => $file_pdf]);
 
+        // Langsung redirect, tanpa session
         return redirect()->to(route('admin.riwayat', $riwayat->id));
     }
 }

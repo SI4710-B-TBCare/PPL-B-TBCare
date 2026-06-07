@@ -10,14 +10,19 @@ class LoginTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
-     *
-     * @return void
      */
-    public function testExample()
+    public function testLogin(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                    ->assertSee('Laravel');
+            $browser->visit('/login')
+            ->waitFor('#username', 10)
+            ->type('#username', 'admin')
+            ->type('#password', 'admin123')
+            ->press('Login')
+            ->waitForLocation('/panel/dashboard')
+            ->assertPathIs('/panel/dashboard')
+            ->assertSee('Dashboard')
+            ->screenshot('after-login');
         });
     }
 }

@@ -48,11 +48,6 @@ abstract class DuskTestCase extends BaseTestCase
         );
     }
 
-    protected function baseUrl()
-    {
-        return 'http://localhost:8000';
-    }
-
     /**
      * Determine whether the Dusk command has disabled headless mode.
      *
