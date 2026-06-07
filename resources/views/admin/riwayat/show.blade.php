@@ -66,6 +66,25 @@
 				<h5 class="font-weight-bold">Kesimpulan</h5>
 				<p>Berdasarkan dari gejala yang kamu pilih atau alami juga berdasarkan Role/Basis aturan yang sudah ditentukan oleh seorang pakar penyakit maka perhitungan Algoritma Certainty Factor mengambil nilai CF yang paling pinggi yakni <b>{{ number_format(unserialize($riwayat->cf_max)[0], 3) }} ({{ number_format(unserialize($riwayat->cf_max)[0], 3) * 100 }}%)</b> yaitu <b>{{ unserialize($riwayat->cf_max)[1] }}</b></p>
 			</div>
+
+			{{-- Ganti @if(session()->has('rekomendasi')) --}}
+			@isset($rekomendasi)
+			@php $rek = $rekomendasi @endphp
+			<div class="alert alert-{{ $rek['level'] }} mt-3">
+				<h5 class="font-weight-bold">
+					<i class="fas fa-clipboard-list mr-1"></i> Rekomendasi
+				</h5>
+				<p class="mb-2">
+					Dengan nilai kepastian <strong>{{ $rek['persen'] }}%</strong>, berikut langkah yang disarankan:
+				</p>
+				<ul class="mb-0 pl-3">
+					@foreach($rek['saran'] as $saran)
+					<li class="mb-1">{!! $saran !!}</li>
+					@endforeach
+				</ul>
+			</div>
+			@endisset
+
 			<div class="mt-3 text-center">
 				<a href="{{ asset("storage/downloads/$riwayat->file_pdf") }}" target="_blank" class="btn btn-primary mr-1"><i class="fas fa-print mr-1"></i> Print</a>
 				<a href="{{ route('admin.diagnosa') }}" class="btn btn-warning mr-1"><i class="fas fa-redo mr-1"></i> Diagnosa ulang</a>
