@@ -16,16 +16,16 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Johni', 
-            'username' => 'johni',
-            'password' => bcrypt('john123')
-        ]);
+        $user = User::firstOrCreate(
+            ['username' => 'johni'],
+            [
+                'name'     => 'Johni',
+                'password' => bcrypt('john123')
+            ]
+        );
 
-        $role = Role::create(['name' => 'Pengguna']);
-   
-        $role->syncPermissions([24, 25, 26, 27]);
-     
-        $user->assignRole([$role->id]);   
+        $role = Role::firstOrCreate(['name' => 'user']);
+
+        $user->assignRole($role);
     }
 }
