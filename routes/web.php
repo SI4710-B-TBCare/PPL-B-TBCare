@@ -103,6 +103,7 @@ Route::group([
     Route::get('/forum', [ForumController::class, 'index'])->name('forum');
 	Route::get('/forum/{forum}', [ForumController::class, 'show'])->name('forum.show');
 	Route::post('/forum/{forum}/destroy', [ForumController::class, 'destroy'])->name('forum.destroy');
+	Route::post('/forum/comment/{comment}/destroy', [ForumCommentController::class, 'destroy'])->name('forum.comment.destroy');
     
 });
 
