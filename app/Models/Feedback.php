@@ -12,6 +12,7 @@ class Feedback extends Model
     protected $table = 'feedbacks';
 
     protected $fillable = [
+        'user_id',
         'nama',
         'email',
         'pesan'
@@ -30,5 +31,10 @@ class Feedback extends Model
     public function getDescriptionForEvent(string $eventName): string
     {
         return "You have {$eventName} feedback";
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

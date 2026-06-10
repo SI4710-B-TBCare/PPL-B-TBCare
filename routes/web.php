@@ -62,6 +62,14 @@ Route::group([
 	Route::post('/feedback/update', [FeedbackController::class, 'update'])->name('feedback.update');
 	Route::post('/feedback/{feedback}/destroy', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
 
+	// menu forum (new)
+	Route::get('/forum', [App\Http\Controllers\ForumController::class, 'index'])->name('forum');
+	Route::get('/forum/json', [App\Http\Controllers\ForumController::class, 'json'])->name('forum.json');
+	Route::get('/forum/{forum}', [App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
+	Route::post('/forum/update', [App\Http\Controllers\ForumController::class, 'update'])->name('forum.update');
+	Route::post('/forum/{forum}/destroy', [App\Http\Controllers\ForumController::class, 'destroy'])->name('forum.destroy');
+	Route::post('/forum/comment/{comment}/destroy', [App\Http\Controllers\ForumCommentController::class, 'destroy'])->name('forum.comment.destroy');
+
 	// menu monitoring (new)
 	Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
 	Route::post('/monitoring', [MonitoringController::class, 'store'])->name('monitoring.store');
@@ -83,6 +91,30 @@ Route::group([
 	Route::get('/tes', function() {
 	})->name('test');
 
+});
+
+// User routes
+Route::group([
+	'middleware' => 'auth',
+	'prefix' => 'user',
+	'as' => 'user.'
+], function(){
+	// menu feedback for user
+	Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback');
+	Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+	Route::get('/feedback/json', [FeedbackController::class, 'json'])->name('feedback.json');
+	Route::post('/feedback/update', [FeedbackController::class, 'update'])->name('feedback.update');
+	Route::post('/feedback/{feedback}/destroy', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
+
+	// menu forum for user
+	Route::get('/forum', [App\Http\Controllers\ForumController::class, 'index'])->name('forum');
+	Route::post('/forum', [App\Http\Controllers\ForumController::class, 'store'])->name('forum.store');
+	Route::get('/forum/json', [App\Http\Controllers\ForumController::class, 'json'])->name('forum.json');
+	Route::get('/forum/{forum}', [App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
+	Route::post('/forum/update', [App\Http\Controllers\ForumController::class, 'update'])->name('forum.update');
+	Route::post('/forum/{forum}/destroy', [App\Http\Controllers\ForumController::class, 'destroy'])->name('forum.destroy');
+	Route::post('/forum/{forum}/comment', [App\Http\Controllers\ForumCommentController::class, 'store'])->name('forum.comment.store');
+	Route::post('/forum/comment/{comment}/destroy', [App\Http\Controllers\ForumCommentController::class, 'destroy'])->name('forum.comment.destroy');
 });
 
 
