@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\Riwayat;
 use App\Models\User;
+use App\Models\TbPrediction;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 use Illuminate\Support\Facades\Hash;
@@ -16,8 +16,7 @@ class DashboardController extends Controller
     public function index()
     {
         $logs = Activity::where('causer_id', auth()->id())->latest()->paginate(5);
-        
-        $riwayat = Riwayat::select(
+        $riwayat = TbPrediction::select(
             DB::raw("COUNT(id) as total"),
             DB::raw("DATE_FORMAT(created_at, '%d %M') as days"),
             DB::raw("MIN(created_at) as min_date")
@@ -25,7 +24,10 @@ class DashboardController extends Controller
         ->where('created_at', '>=', Carbon::now()->subDays(7))
         ->groupBy('days')->orderBy('min_date', 'asc')->get();
 
-        $riwayatList = Riwayat::latest()->limit(5)->get();
+        $riwayatList = TbPrediction::with('user')
+            ->latest()
+            ->limit(5)
+            ->get();
 
         $sebaranWilayah = User::select('provinsi', DB::raw('count(*) as total'))
             ->whereNotNull('provinsi')

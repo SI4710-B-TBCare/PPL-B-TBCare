@@ -13,17 +13,15 @@ class FasilitasKesehatan extends Model
 
     protected $table = 'fasilitas_kesehatan';
 
+    public $timestamps = true;
+
     protected $fillable = [
         'kode',
         'nama',
-        'penyebab'
+        'penyebab',
     ];
 
-    public $timestamps = false;
-
-    protected static $logAttributes = ['nama', 'kode'];
-
-    protected static $igonoreChangedAttributes = ['updated_at'];
+    protected static $logAttributes = ['kode', 'nama', 'penyebab'];
 
     protected static $recordEvents = ['created', 'updated', 'deleted'];
 
@@ -47,6 +45,6 @@ class FasilitasKesehatan extends Model
 
     public function artikels()
     {
-        return $this->belongsToMany(Artikel::class, 'artikel_fasilitas_kesehatan')->withPivot('value_cf');
+        return $this->belongsToMany(Artikel::class, 'artikel_fasilitas_kesehatan')->withPivot('id', 'value_cf');
     }
 }

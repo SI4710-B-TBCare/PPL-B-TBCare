@@ -11,24 +11,5 @@ class Feedback extends Model
 
     protected $table = 'feedbacks';
 
-    protected $fillable = [
-        'nama',
-        'email',
-        'pesan'
-    ];
-
-    protected static $logAttributes = ['nama', 'email', 'pesan'];
-
-    protected static $igonoreChangedAttributes = ['updated_at'];
-
-    protected static $recordEvents = ['created', 'updated', 'deleted'];
-
-    protected static $logOnlyDirty = true;
-
-    protected static $logName = 'feedback';
-
-    public function getDescriptionForEvent(string $eventName): string
-    {
-        return "You have {$eventName} feedback";
-    }
+    protected $guarded = ['id'];
 }

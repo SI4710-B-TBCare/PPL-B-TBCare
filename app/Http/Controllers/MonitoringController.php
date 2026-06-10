@@ -54,7 +54,7 @@ class MonitoringController extends Controller
             'status' => $request->status
         ]);
 
-        return redirect()->back()->with('success', 'Data hasil lab berhasil disimpan');
+        return back()->with('success', 'Data monitoring berhasil disimpan');
     }
     
 
@@ -86,14 +86,7 @@ class MonitoringController extends Controller
                 'status' => $request->status
             ]);
 
-        $data->update([
-            'tanggal' => $request->tanggal,
-            'hasil_lab' => $request->hasil_lab,
-            'keterangan' => $request->keterangan,
-            'status' => $request->status
-        ]);
-
-        return redirect()->back()->with('success', 'Data berhasil diupdate');
+        return back()->with('success', 'Data monitoring berhasil diubah');
     }
 
 
