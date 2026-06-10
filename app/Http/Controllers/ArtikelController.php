@@ -4,28 +4,101 @@ namespace App\Http\Controllers;
 
 use App\Models\Artikel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArtikelController extends Controller
 {
-    public function index()
+    function __construct()
     {
-        $artikel = Artikel::paginate(10);
-        return view('admin.artikel.index', compact('artikel'));
+        $this->middleware('permission:artikel-list',   ['only' => ['index']]);
+        $this->middleware('permission:artikel-create', ['only' => ['store', 'generateKodeJson']]);
+        $this->middleware('permission:artikel-edit',   ['only' => ['update', 'json']]);
+        $this->middleware('permission:artikel-delete', ['only' => ['destroy']]);
+    }
+
+    public function index(Request $request)
+    {
+        $search   = $request->input('search');
+        $kategori = $request->input('kategori');
+
+        $kategoris = ['Pencegahan', 'Pengobatan', 'Gejala', 'Umum'];
+
+        $artikel = Artikel::when($search, function ($query, $search) {
+                $query->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('kode', 'like', '%' . $search . '%');
+            })
+            ->when($kategori, function ($query, $kategori) {
+                $query->where('kategori', $kategori);
+            })
+            ->paginate(10);
+
+        $artikel->appends(['search' => $search, 'kategori' => $kategori]);
+
+        return view('admin.artikel.index', compact('artikel', 'search', 'kategori', 'kategoris'));
+    }
+
+    /**
+     * Generate kode otomatis: ART-001, ART-002, dst
+     */
+    private function generateKode(?string $kategori = null): string
+    {
+        $prefix = 'ART';
+        if ($kategori) {
+            $prefixes = [
+                'Pencegahan' => 'PENC',
+                'Pengobatan' => 'PENG',
+                'Gejala'   => 'GEJL',
+                'Umum'     => 'UMUM'
+            ];
+            $prefix = $prefixes[$kategori] ?? 'ART';
+        }
+
+        $last = Artikel::where('kode', 'like', $prefix . '-%')->orderBy('id', 'desc')->first();
+
+        if (!$last) {
+            return $prefix . '-001';
+        }
+
+        // Ambil angka setelah prefix (contoh: PENG-023 => 23)
+        $lastNumber = (int) substr($last->kode, strlen($prefix) + 1);
+        $newNumber  = $lastNumber + 1;
+
+        return $prefix . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Endpoint untuk generate kode via AJAX
+     */
+    public function generateKodeJson(Request $request)
+    {
+        return response()->json(['kode' => $this->generateKode($request->kategori)]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kode' => 'required|string',
-            'nama' => 'required|string',
+            'nama'   => 'required|string|max:255',
+            'kategori' => 'required|string',
+            'isi'    => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Artikel::create([
-            'kode' => $request->kode,
-            'nama' => $request->nama,
-        ]);
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $gambarPath = $request->file('gambar')->store('artikel', 'public');
+        }
 
-        return back()->with('success', 'Data artikel berhasil ditambahkan');
+        Artikel::withoutEvents(function () use ($request, $gambarPath) {
+            $artikel = new Artikel();
+            $artikel->kode   = $this->generateKode($request->kategori);
+            $artikel->nama   = $request->nama;
+            $artikel->isi    = $request->isi;
+            $artikel->kategori = $request->kategori;
+            $artikel->gambar = $gambarPath;
+            $artikel->save();
+        });
+        
+        return back()->with('success', 'Data artikel berhasil disimpan');
     }
 
     public function json()
@@ -34,24 +107,56 @@ class ArtikelController extends Controller
         return response()->json($data);
     }
 
-    public function update(Request $request)
+    public function update(Request $request)#s
     {
         $request->validate([
-            'kode' => 'required|string',
-            'nama' => 'required|string',
+            'id'     => 'required|exists:artikels,id',
+            'kode'   => 'required|string|max:50',
+            'nama'   => 'required|string|max:255',
+            'kategori' => 'required|string',
+            'isi'    => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Artikel::where('id', $request->id)->update([
-            'kode' => $request->kode,
-            'nama' => $request->nama,
-        ]);
+        $artikel = Artikel::findOrFail($request->id);
+
+        $gambarPath = $artikel->gambar; // pakai gambar lama jika tidak upload baru
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama dari storage
+            if ($artikel->gambar) {
+                Storage::disk('public')->delete($artikel->gambar);
+            }
+            $gambarPath = $request->file('gambar')->store('artikel', 'public');
+        }
+
+        Artikel::withoutEvents(function () use ($artikel, $request, $gambarPath) {
+            $artikel->kode   = $request->kode;
+            $artikel->nama   = $request->nama;
+            $artikel->isi    = $request->isi;
+            $artikel->kategori = $request->kategori;
+            $artikel->gambar = $gambarPath;
+            $artikel->save();
+        });
 
         return back()->with('success', 'Data artikel berhasil diubah');
     }
 
     public function destroy($id)
     {
-        Artikel::find($id)->delete();
+        $artikel = Artikel::findOrFail($id);
+
+        if ($artikel->gambar) {
+            Storage::disk('public')->delete($artikel->gambar);
+        }
+
+        $artikel->delete();
+
         return back()->with('success', 'Data artikel berhasil dihapus');
+    }
+
+    public function show($id)
+    {
+        $artikel = Artikel::findOrFail($id);
+        return view('admin.artikel.show', compact('artikel'));
     }
 }

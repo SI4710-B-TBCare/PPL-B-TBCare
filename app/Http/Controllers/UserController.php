@@ -23,8 +23,25 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = User::paginate(10);
-        return view('admin.users.index',compact('users'));
+        $users = User::query();
+
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+
+            $users->where(function ($query) use ($keyword) {
+                $query->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('username', 'like', "%{$keyword}%")
+                    ->orWhere('provinsi', 'like', "%{$keyword}%")
+                    ->orWhere('kota', 'like', "%{$keyword}%")
+                    ->orWhereHas('roles', function ($query) use ($keyword) {
+                        $query->where('name', 'like', "%{$keyword}%");
+                    });
+            });
+        }
+
+        $users = $users->paginate(10)->appends($request->only('keyword'));
+
+        return view('admin.users.index', compact('users'));
     }
     
     public function create()
