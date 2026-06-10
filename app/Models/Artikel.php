@@ -9,11 +9,17 @@ class Artikel extends Model
 {
     use HasFactory;
 
-    protected $table = 'artikels';
+    protected $fillable = [
+        'nama',
+        'kode',
+        'kategori',
+        'gambar',
+        'isi'
+    ];
 
     public $timestamps = false;
 
-    protected $guarded = ['id'];
+    protected static $logAttributes = ['nama', 'kode', 'kategori', 'gambar', 'isi'];
 
     public function fasilitasKesehatans()
     {
