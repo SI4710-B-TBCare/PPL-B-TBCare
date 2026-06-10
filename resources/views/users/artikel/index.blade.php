@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-user-app-layout>
     <x-slot name="title">Daftar Artikel TBCare</x-slot>
 
     <style>
@@ -123,4 +123,4 @@
             </div>
         @endif
     </div>
-</x-app-layout>
+</x-user-app-layout>

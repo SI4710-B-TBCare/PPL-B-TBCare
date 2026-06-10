@@ -17,6 +17,8 @@ use App\Http\Controllers\{
     ForumController,
     ForumCommentController
 };
+use App\Http\Controllers\User\DashboardController as UserDashboard;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 
 Route::redirect('/', '/login');
 
@@ -30,7 +32,7 @@ Route::group([
     'as'         => 'admin.',
 ], function () {
 
-    // Dashboard
+    // Dashboard Admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Logs aktivitas
@@ -113,6 +115,9 @@ Route::group([
     'prefix'     => 'users',
     'as'         => 'users.',
 ], function () {
+
+    // Dashboard User
+    Route::get('/dashboard', [UserDashboard::class, 'index'])->name('dashboard');
 
     // Artikel User
     Route::get('/artikel', [UserArtikelController::class, 'index'])->name('artikel.index');

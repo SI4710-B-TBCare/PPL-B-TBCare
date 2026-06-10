@@ -33,6 +33,12 @@
     {{-- Menu untuk role USER: prediksi ML --}}
     @role('user')
     <x-nav-link
+        text="Dashboard"
+        icon="tachometer-alt"
+        url="{{ route('users.dashboard') }}"
+        active="{{ request()->routeIs('users.dashboard') ? ' active' : '' }}"
+    />
+    <x-nav-link
         text="Prediksi Risiko TBC"
         icon="heartbeat"
         url="{{ route('users.prediksi.create') }}"

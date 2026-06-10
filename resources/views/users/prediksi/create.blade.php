@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-user-app-layout>
     <x-slot name="title">Prediksi Risiko TBC</x-slot>
 
     <section class="row">
@@ -239,4 +239,4 @@
         </script>
     </x-slot>
 
-</x-app-layout>
+</x-user-app-layout>

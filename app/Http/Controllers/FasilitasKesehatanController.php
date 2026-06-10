@@ -7,7 +7,7 @@ use App\Models\FasilitasKesehatan;
 
 class FasilitasKesehatanController extends Controller
 {
-    function __construct()
+    public function __construct()
     {
         $this->middleware('permission:fasilitasKesehatan-list', ['only' => ['index']]);
         $this->middleware('permission:fasilitasKesehatan-create', ['only' => ['store']]);
