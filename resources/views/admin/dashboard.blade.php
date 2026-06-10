@@ -12,7 +12,7 @@
         />
         <x-card-sum 
             text="Total Diagnosa" 
-            value="{{ App\Models\Riwayat::count() }}" 
+            value="{{ App\Models\TbPrediction::count() }}" 
             icon="stethoscope" 
             color="primary"
         />
