@@ -16,9 +16,8 @@ class CreateGejalaPenyakitTable extends Migration
         Schema::create('gejala_penyakit', function (Blueprint $table) {
             $table->id();
             $table->foreignId('gejala_id')->constrained('gejalas')->cascadeOnDelete();
-            $table->foreignId('fasilitas_kesehatan_id')->constrained('fasilitas_kesehatan')->cascadeOnDelete();
+            $table->foreignId('penyakit_id')->constrained('penyakits')->cascadeOnDelete();
             $table->float('value_cf')->nullable();
-        });
         });
     }
 

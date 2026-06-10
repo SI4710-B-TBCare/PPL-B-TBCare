@@ -64,8 +64,8 @@
     </div>
 
     <div class="text-center mb-4">
-        <a href="{{ url('/panel/artikel') }}" class="btn btn-secondary">
-            &larr; Kembali
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">
+            ← Kembali
         </a>
     </div>
 
