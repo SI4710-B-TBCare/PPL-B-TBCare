@@ -133,6 +133,28 @@
     />
     @endcan
     
+    @if(auth()->user()->hasRole('Admin'))
+    <x-nav-link 
+        text="Forum" 
+        icon="comments" 
+        url="{{ route('admin.forum') }}"
+        active="{{ request()->routeIs('admin.forum*') ? ' active' : '' }}"
+    />
+    @else
+    <x-nav-link 
+        text="Feedback" 
+        icon="comment-dots" 
+        url="{{ route('users.feedback') }}"
+        active="{{ request()->routeIs('users.feedback*') ? ' active' : '' }}"
+    />
+    <x-nav-link 
+        text="Forum" 
+        icon="comments" 
+        url="{{ route('users.forum') }}"
+        active="{{ request()->routeIs('users.forum*') ? ' active' : '' }}"
+    />
+    @endif
+    
     <hr class="sidebar-divider mb-0">
 
 </ul>

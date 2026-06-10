@@ -13,7 +13,9 @@ use App\Http\Controllers\{
     RuleController,
     UserController,
     TbPredictionController,
-    ChatbotController
+    ChatbotController,
+    ForumController,
+    ForumCommentController
 };
 
 Route::redirect('/', '/login');
@@ -94,6 +96,12 @@ Route::group([
     Route::get('/fasilitasKesehatan/json', [FasilitasKesehatanController::class, 'json'])->name('fasilitasKesehatan.json');
     Route::post('/fasilitasKesehatan/update', [FasilitasKesehatanController::class, 'update'])->name('fasilitasKesehatan.update');
     Route::post('/fasilitasKesehatan/{f}/destroy', [FasilitasKesehatanController::class, 'destroy'])->name('fasilitasKesehatan.destroy');
+    
+    //forum
+    Route::get('/forum', [ForumController::class, 'index'])->name('forum');
+	Route::get('/forum/{forum}', [ForumController::class, 'show'])->name('forum.show');
+	Route::post('/forum/{forum}/destroy', [ForumController::class, 'destroy'])->name('forum.destroy');
+    
 });
 
 // ============================================================
@@ -122,6 +130,23 @@ Route::group([
     Route::get('/chatbot/{predictionId}', [ChatbotController::class, 'index'])->name('chatbot.prediksi');
     Route::post('/chatbot/send',          [ChatbotController::class, 'send'])->name('chatbot.send');
     Route::post('/chatbot/reset',         [ChatbotController::class, 'reset'])->name('chatbot.reset');
+
+    // menu feedback for user
+	Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback');
+	Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+	Route::get('/feedback/json', [FeedbackController::class, 'json'])->name('feedback.json');
+	Route::post('/feedback/update', [FeedbackController::class, 'update'])->name('feedback.update');
+	Route::post('/feedback/{feedback}/destroy', [FeedbackController::class, 'destroy'])->name('feedback.destroy');
+
+	// menu forum for user
+	Route::get('/forum', [ForumController::class, 'index'])->name('forum');
+	Route::post('/forum', [ForumController::class, 'store'])->name('forum.store');
+	Route::get('/forum/json', [ForumController::class, 'json'])->name('forum.json');
+	Route::get('/forum/{forum}', [ForumController::class, 'show'])->name('forum.show');
+	Route::post('/forum/update', [ForumController::class, 'update'])->name('forum.update');
+	Route::post('/forum/{forum}/destroy', [ForumController::class, 'destroy'])->name('forum.destroy');
+	Route::post('/forum/{forum}/comment', [ForumCommentController::class, 'store'])->name('forum.comment.store');
+	Route::post('/forum/comment/{comment}/destroy', [ForumCommentController::class, 'destroy'])->name('forum.comment.destroy');
 });
 
 require __DIR__.'/auth.php';
