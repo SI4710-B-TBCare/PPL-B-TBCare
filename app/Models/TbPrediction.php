@@ -67,4 +67,28 @@ class TbPrediction extends Model
             2 => 'Kehijauan',
         ];
     }
+
+    /**
+     * Bangun teks konteks prediksi untuk dikirim ke model AI.
+     */
+    public function buildPredictionContext(): string
+    {
+        $labels   = self::featureLabels();
+        $features = [];
+
+        foreach ($labels as $key => $label) {
+            $value = $this->{$key};
+            $features[] = '- ' . $label . ': ' . $value;
+        }
+
+        $featuresText = implode("\n", $features);
+
+        return "Berikut adalah data hasil prediksi risiko TBC saya:\n"
+            . "Tingkat Risiko: " . $this->risk_level . "\n"
+            . "Persentase Risiko: " . $this->risk_percentage . "%\n"
+            . "Tanggal Prediksi: " . $this->created_at->format('d M Y, H:i') . "\n\n"
+            . "Data Gejala yang Saya Inputkan:\n" . $featuresText . "\n\n"
+            . "Berdasarkan data di atas, tolong berikan saran, rekomendasi langkah selanjutnya, "
+            . "dan informasi penting yang perlu saya ketahui terkait kondisi ini.";
+    }
 }

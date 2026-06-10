@@ -106,6 +106,7 @@ Route::group([
     Route::get('/prediksi/create',        [TbPredictionController::class, 'create'])->name('prediksi.create');
     Route::post('/prediksi',              [TbPredictionController::class, 'store'])->name('prediksi.store');
     Route::get('/prediksi/{tbPrediction}',[TbPredictionController::class, 'show'])->name('prediksi.show');
+    Route::post('/prediksi/{id}/auto-recommendation', [TbPredictionController::class, 'generateAutoRecommendation'])->name('prediksi.auto-recommendation');
 
     // ChatBot TBC
     Route::get('/chatbot',                [ChatbotController::class, 'index'])->name('chatbot');
