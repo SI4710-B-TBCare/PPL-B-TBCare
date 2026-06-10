@@ -2,76 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Feedback;
+use Illuminate\Http\Request;
 
 class FeedbackController extends Controller
 {
-    // Custom authorization logic is handled inside the methods
-
-
     public function index()
     {
-        if (auth()->user()->hasRole('Admin')) {
-            $feedback = Feedback::with('user')->paginate(10);
-            return view('admin.feedback.index', compact('feedback'));
-        }
-
-        $feedback = Feedback::where('user_id', auth()->id())->paginate(10);
-        return view('user.feedback.index', compact('feedback'));
+        $feedback = Feedback::latest()->paginate(10);
+        return view('admin.feedback.index', compact('feedback'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|string',
             'email' => 'required|email',
-            'pesan' => 'required'
+            'pesan' => 'required|string',
         ]);
 
-        $data = $request->all();
-        $data['user_id'] = auth()->id();
+        Feedback::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'pesan' => $request->pesan,
+        ]);
 
-        Feedback::create($data);
-
-        return back()->with('success', 'Feedback berhasil disimpan');
+        return back()->with('success', 'Data feedback berhasil ditambahkan');
     }
+
     public function json()
     {
-        $data = Feedback::findOrFail(request('id'));
-        
-        if (!auth()->user()->hasRole('Admin') && $data->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        $data = Feedback::find(request('id'));
         return response()->json($data);
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|string',
             'email' => 'required|email',
-            'pesan' => 'required'
+            'pesan' => 'required|string',
         ]);
 
-        $feedback = Feedback::findOrFail($request->id);
+        Feedback::where('id', $request->id)->update([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'pesan' => $request->pesan,
+        ]);
 
-        if (!auth()->user()->hasRole('Admin') && $feedback->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $feedback->update($request->all());
-
-        return back()->with('success', 'Feedback berhasil diubah');
+        return back()->with('success', 'Data feedback berhasil diubah');
     }
-    public function destroy(Feedback $feedback)
-    {
-        if (!auth()->user()->hasRole('Admin') && $feedback->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
-        }
 
-        $feedback->delete();
-        return back()->with('success', 'Feedback berhasil dihapus');
+    public function destroy($id)
+    {
+        Feedback::find($id)->delete();
+        return back()->with('success', 'Data feedback berhasil dihapus');
     }
 }

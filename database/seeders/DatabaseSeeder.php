@@ -18,9 +18,14 @@ class DatabaseSeeder extends Seeder
             CreateAdminUserSeeder::class,
             CreatePenyakitSeeder::class,
             CreateGejalaSeeder::class,
-            GejalaPenyakitSeeder::class,
+            ArtikelSeeder::class,
+            // CreateFasilitasKesehatanSeeder::class,
+            // GejalaPenyakitSeeder::class,
             CreateFeedbackSeeder::class,
             CreateMonitoringSeeder::class,
+            UserSeeder::class,
+            // ForumSeeder::class,
+            // ForumCommentSeeder::class,
         ]);
     }
 }

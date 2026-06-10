@@ -28,7 +28,7 @@
 					<span class="text-muted small ml-2">{{ $comment->created_at->format('d M Y H:i') }}</span>
 				</div>
 				@if($comment->user_id == auth()->id())
-				<form action="{{ route('user.forum.comment.destroy', $comment->id) }}" method="post">
+				<form action="{{ route('users.forum.comment.destroy', $comment->id) }}" method="post">
 					@csrf
 					<button type="submit" class="btn btn-danger btn-sm delete-comment"><i class="fas fa-trash"></i></button>
 				</form>
@@ -50,7 +50,7 @@
 			<h6 class="m-0 font-weight-bold text-primary">Tambahkan Komentar</h6>
 		</div>
 		<div class="card-body">
-			<form action="{{ route('user.forum.comment.store', $forum->id) }}" method="post">
+			<form action="{{ route('users.forum.comment.store', $forum->id) }}" method="post">
 				@csrf
 				<div class="form-group">
 					<textarea class="form-control" name="konten" rows="3" placeholder="Tulis komentar Anda di sini..." required></textarea>
@@ -60,7 +60,7 @@
 		</div>
 	</div>
 
-	<a href="{{ route('user.forum') }}" class="btn btn-secondary mt-3">Kembali</a>
+	<a href="{{ route('users.forum') }}" class="btn btn-secondary mt-3">Kembali</a>
 
 	<x-slot name="script">
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

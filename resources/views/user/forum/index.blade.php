@@ -25,10 +25,10 @@
 					<td>{{ Str::limit($row->konten, 50) }}</td>
 					<td>
 						<div class="d-flex">
-							<a href="{{ route('user.forum.show', $row->id) }}" class="btn btn-info btn-sm mr-1"><i class="fas fa-eye"></i></a>
+							<a href="{{ route('users.forum.show', $row->id) }}" class="btn btn-info btn-sm mr-1"><i class="fas fa-eye"></i></a>
 							@if($row->user_id == auth()->id())
 							<button class="btn btn-primary btn-sm edit" data-id="{{ $row->id }}"><i class="fas fa-edit"></i></button>
-							<form action="{{ route('user.forum.destroy', $row->id) }}" method="post" class="ml-1">
+							<form action="{{ route('users.forum.destroy', $row->id) }}" method="post" class="ml-1">
 								@csrf
 								<button type="submit" class="btn btn-danger btn-sm delete"><i class="fas fa-trash"></i></button>
 							</form>
@@ -49,7 +49,7 @@
 	</x-card>
 
 	<x-modal title="Tambahkan Forum" id="forum">
-		<form action="{{ route('user.forum.store') }}" method="POST">
+		<form action="{{ route('users.forum.store') }}" method="POST">
 			@csrf
 			<div class="form-group">
 				<label for="judul">Judul</label>
@@ -66,7 +66,7 @@
 	</x-modal>
 
 	<x-modal title="Edit Forum" id="edit-forum">
-		<form action="{{ route('user.forum.update') }}" method="POST">
+		<form action="{{ route('users.forum.update') }}" method="POST">
 			@csrf
 			<input type="hidden" name="id">
 			<div class="form-group">
@@ -111,7 +111,7 @@
 			$('.edit').click(function() {
 				const id = $(this).data('id')
 
-				$.get(`{{ route('user.forum.json') }}?id=${id}`, function(res) {
+				$.get(`{{ route('users.forum.json') }}?id=${id}`, function(res) {
 					$('#edit-forum input[name="id"]').val(res.id)
 					$('#edit-forum input[name="judul"]').val(res.judul)
 					$('#edit-forum textarea[name="konten"]').val(res.konten)
