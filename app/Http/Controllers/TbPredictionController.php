@@ -8,6 +8,7 @@ use App\Services\GroqApiService;
 use App\Services\TBPredictionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Artikel;
 
 class TbPredictionController extends Controller
 {
@@ -134,7 +135,45 @@ class TbPredictionController extends Controller
         $options = TbPrediction::severityOptions();
         $sputum  = TbPrediction::sputumOptions();
 
-        return view('users.prediksi.show', compact('tbPrediction', 'labels', 'options', 'sputum'));
+        // Rekomendasi Artikel berdasarkan Kategori dan Keyword Judul
+        $categories = [];
+        $keywords = [];
+
+        if ($tbPrediction->risk_level === 'Rendah') {
+            $categories = ['Pencegahan', 'Umum'];
+            $keywords = ['pencegahan', 'edukasi', 'gaya hidup sehat', 'menjaga imun', 'mencegah TBC', 'tuberkulosis'];
+        } elseif ($tbPrediction->risk_level === 'Sedang') {
+            $categories = ['Gejala', 'Penanganan', 'Umum'];
+            $keywords = ['gejala', 'pemeriksaan', 'deteksi dini', 'konsultasi', 'tanda TBC', 'kapan ke dokter'];
+        } elseif ($tbPrediction->risk_level === 'Tinggi') {
+            $categories = ['Pengobatan', 'Tindakan Segera'];
+            $keywords = ['pengobatan', 'diagnosis', 'penanganan', 'dokter', 'terapi', 'tindakan segera', 'pemeriksaan lanjutan'];
+        }
+
+        // 1. Ambil berdasarkan kategori
+        $articlesByCategory = Artikel::whereIn('kategori', $categories)->get();
+
+        // 2. Ambil berdasarkan keyword judul
+        $query = Artikel::query();
+        foreach ($keywords as $keyword) {
+            $query->orWhere('nama', 'like', '%' . $keyword . '%');
+        }
+        $articlesByKeyword = $query->get();
+
+        // 3. Gabungkan dan hilangkan duplikat
+        $recommendedArticles = $articlesByCategory->merge($articlesByKeyword)->unique('id');
+
+        // 4. Fallback jika masih kurang dari 3
+        if ($recommendedArticles->count() < 3) {
+            $fallback = Artikel::where('kategori', 'Umum')->get();
+            $recommendedArticles = $recommendedArticles->merge($fallback)->unique('id');
+        }
+
+        // Pisahkan 3 teratas dan sisanya
+        $topArticles = $recommendedArticles->take(3);
+        $moreArticles = $recommendedArticles->slice(3);
+
+        return view('users.prediksi.show', compact('tbPrediction', 'labels', 'options', 'sputum', 'topArticles', 'moreArticles'));
     }
 
     /**
