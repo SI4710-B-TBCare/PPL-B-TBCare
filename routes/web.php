@@ -12,10 +12,13 @@ use App\Http\Controllers\{
     MonitoringController,
     RuleController,
     UserController,
+    JadwalPemeriksaanController,
+    PerkembanganKesehatanController,
     TbPredictionController,
     ChatbotController,
     ForumController,
     ForumCommentController
+
 };
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
@@ -68,6 +71,22 @@ Route::group([
     Route::get('/monitoring/json', [MonitoringController::class, 'json'])->name('monitoring.json');
     Route::post('/monitoring/update', [MonitoringController::class, 'update'])->name('monitoring.update');
     Route::post('/monitoring/{monitoring}/destroy', [MonitoringController::class, 'destroy'])->name('monitoring.destroy');
+	Route::get('/monitoring/history', [MonitoringController::class, 'history'])->name('monitoring.history');
+	Route::get('/monitoring/download/{id}', [MonitoringController::class, 'download'])->name('monitoring.download');
+
+	// Perkembangan Kesehatan
+	Route::get('/monitoring/{monitoring_id}/perkembangan',[PerkembanganKesehatanController::class, 'index'])->name('perkembangan');
+	Route::post('/perkembangan/store', [PerkembanganKesehatanController::class, 'store'])->name('perkembangan.store');
+	Route::get('/perkembangan/json',[PerkembanganKesehatanController::class, 'json'])->name('perkembangan.json');
+	Route::post('/perkembangan/update',[PerkembanganKesehatanController::class, 'update'])->name('perkembangan.update');
+	Route::post('/perkembangan/{perkembangan}/destroy',[PerkembanganKesehatanController::class, 'destroy'])->name('perkembangan.destroy');
+
+	// Jadwal Pemeriksaan
+	Route::get('/jadwal',[JadwalPemeriksaanController::class, 'index'])->name('jadwal');
+	Route::post('/jadwal',[JadwalPemeriksaanController::class, 'store'])->name('jadwal.store');
+	Route::get('/jadwal/json',[JadwalPemeriksaanController::class, 'json'])->name('jadwal.json');
+	Route::post('/jadwal/update',[JadwalPemeriksaanController::class, 'update'])->name('jadwal.update');
+	Route::post('/jadwal/{id}/destroy',[JadwalPemeriksaanController::class, 'destroy'])->name('jadwal.destroy');
 
     // Menu rules
     Route::get('/rules/{id}', [RuleController::class, 'index'])->name('rules');

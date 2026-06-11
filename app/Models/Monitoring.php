@@ -18,7 +18,9 @@ class Monitoring extends Model
         'tanggal',
         'hasil_lab',
         'keterangan',
-        'status'
+        'status',
+        'file_hasil_lab'
+
     ];
 
 
@@ -26,4 +28,10 @@ class Monitoring extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function perkembangan()
+    {
+        return $this->hasMany(PerkembanganKesehatan::class);
+    }
+
 }
