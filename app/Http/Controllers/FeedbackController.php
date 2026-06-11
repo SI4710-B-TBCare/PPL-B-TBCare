@@ -2,64 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Feedback;
+use Illuminate\Http\Request;
 
 class FeedbackController extends Controller
 {
-    function __construct()
-    {
-         $this->middleware('permission:feedback-list', ['only' => ['index']]);
-         $this->middleware('permission:feedback-create', ['only' => ['store']]);
-         $this->middleware('permission:feedback-edit', ['only' => ['update', 'json']]);
-         $this->middleware('permission:feedback-delete', ['only' => ['destroy']]);
-    }
-
     public function index()
     {
-        $feedback = Feedback::paginate(10);
-
+        $feedback = Feedback::latest()->paginate(10);
         return view('admin.feedback.index', compact('feedback'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|string',
             'email' => 'required|email',
-            'pesan' => 'required'
+            'pesan' => 'required|string',
         ]);
 
-        $data = $request->all();
+        Feedback::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'pesan' => $request->pesan,
+        ]);
 
-        Feedback::create($data);
-
-        return back()->with('success', 'Feedback berhasil disimpan');
+        return back()->with('success', 'Data feedback berhasil ditambahkan');
     }
+
     public function json()
     {
         $data = Feedback::find(request('id'));
-
         return response()->json($data);
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
+            'nama' => 'required|string',
             'email' => 'required|email',
-            'pesan' => 'required'
+            'pesan' => 'required|string',
         ]);
 
-        $data = $request->all();
+        Feedback::where('id', $request->id)->update([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'pesan' => $request->pesan,
+        ]);
 
-        Feedback::find($request->id)->update($data);
-
-        return back()->with('success', 'Feedback berhasil diubah');
+        return back()->with('success', 'Data feedback berhasil diubah');
     }
-    public function destroy(Feedback $feedback)
+
+    public function destroy($id)
     {
-        $feedback->delete();
-        return back()->with('success', 'Feedback berhasil dihapus');
+        Feedback::find($id)->delete();
+        return back()->with('success', 'Data feedback berhasil dihapus');
     }
 }

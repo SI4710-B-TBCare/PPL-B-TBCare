@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChatbotMessage;
 use App\Models\TbPrediction;
+use App\Services\GroqApiService;
 use App\Services\TBPredictionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,12 +12,14 @@ use Illuminate\Support\Facades\Auth;
 class TbPredictionController extends Controller
 {
     protected TBPredictionService $predictionService;
+    protected GroqApiService $groqApiService;
 
     const FEATURES = ['CO','NS','BD','FV','CP','SP','IS','LP','CH','LC','IR','LA','LE','LNE','SBP','BMI'];
 
-    public function __construct(TBPredictionService $predictionService)
+    public function __construct(TBPredictionService $predictionService, GroqApiService $groqApiService)
     {
         $this->predictionService = $predictionService;
+        $this->groqApiService = $groqApiService;
 
         $this->middleware('auth');
 
@@ -131,5 +135,58 @@ class TbPredictionController extends Controller
         $sputum  = TbPrediction::sputumOptions();
 
         return view('users.prediksi.show', compact('tbPrediction', 'labels', 'options', 'sputum'));
+    }
+
+    /**
+     * Generate auto recommendation using Groq API
+     */
+    public function generateAutoRecommendation(Request $request, $id)
+    {
+        $prediction = TbPrediction::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $existingMessage = ChatbotMessage::where('prediction_id', $id)
+            ->where('role', 'model')
+            ->first();
+
+        if ($existingMessage) {
+            return response()->json([
+                'reply' => $existingMessage->content
+            ]);
+        }
+
+        $contextText = $prediction->buildPredictionContext();
+        $contextText .= "\n\nBerikan ringkasan rekomendasi awal yang singkat, padat, dan jelas (maksimal 3 paragraf atau bullet points) terkait hasil ini untuk ditampilkan langsung di halaman hasil prediksi.";
+
+        $messages = [
+            [
+                'role' => 'system',
+                'content' => \App\Http\Controllers\ChatbotController::SYSTEM_PROMPT
+            ],
+            [
+                'role' => 'user',
+                'content' => $contextText
+            ]
+        ];
+
+        try {
+            $aiText = $this->groqApiService->sendMessage($messages);
+
+            ChatbotMessage::create([
+                'user_id' => Auth::id(),
+                'prediction_id' => $id,
+                'role' => 'model',
+                'content' => $aiText
+            ]);
+
+            return response()->json([
+                'reply' => $aiText
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -4,7 +4,7 @@
     {{-- PBI #23 - Search Bar --}}
     <section class="row mb-4">
         <div class="col-12">
-            <form action="{{ route('user.dashboard') }}" method="GET">
+            <form action="{{ request()->routeIs('user.dashboard') }}" method="GET">
                 <div class="input-group">
                     <input
                         type="text"
@@ -20,7 +20,7 @@
                     </div>
                     @if($search)
                     <div class="input-group-append">
-                        <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">
+                        <a href="{{ request()->routeIs('user.dashboard') }}" class="btn btn-secondary">
                             <i class="fas fa-times"></i> Reset
                         </a>
                     </div>

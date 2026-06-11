@@ -4,26 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
-class Monitoring extends Model
+class ForumComment extends Model
 {
     use HasFactory;
 
-    protected $table = 'monitorings';
-
     protected $fillable = [
+        'forum_id',
         'user_id',
-        'nama',
-        'tanggal',
-        'hasil_lab',
-        'keterangan',
-        'status'
+        'konten'
     ];
-
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function forum()
+    {
+        return $this->belongsTo(Forum::class);
     }
 }
