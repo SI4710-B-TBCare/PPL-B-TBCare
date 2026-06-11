@@ -78,7 +78,7 @@
                class="filter-btn {{ !$kategori ? 'active' : '' }}">
                 Semua
             </a>
-            @foreach(['Pencegahan', 'Pengobatan', 'Gejala', 'Umum'] as $kat)
+            @foreach(['Pencegahan', 'Gejala', 'Penanganan', 'Tindakan Segera', 'Pengobatan', 'Umum'] as $kat)
                 <a href="{{ route('users.artikel.index', ['search' => $search ?? '', 'kategori' => $kat]) }}"
                    class="filter-btn {{ ($kategori ?? '') == $kat ? 'active' : '' }}">
                     {{ $kat }}
