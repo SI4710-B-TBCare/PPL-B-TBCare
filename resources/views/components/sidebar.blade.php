@@ -130,14 +130,14 @@
     />
     @endcan
 
-    @can('rules-list')
+    <!-- @can('rules-list')
     <x-nav-link 
         text="Basis Rules" 
         icon="briefcase-medical" 
         url="{{ route('admin.rules', 1) }}"
         active="{{ request()->routeIs('admin.rules') ? ' active' : '' }}"
     />
-    @endcan
+    @endcan -->
     
     @if(auth()->user()->hasRole('Admin'))
     <x-nav-link 
