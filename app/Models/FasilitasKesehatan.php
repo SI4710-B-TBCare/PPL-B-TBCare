@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class FasilitasKesehatan extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'fasilitas_kesehatan';
 
@@ -30,6 +32,15 @@ class FasilitasKesehatan extends Model
     public function getDescriptionForEvent(string $eventName): string
     {
         return "You have {$eventName} fasilitas kesehatan";
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama', 'kode'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "You have {$eventName} fasilitas kesehatan")
+            ->useLogName('fasilitasKesehatan');
     }
 
     public function artikels()

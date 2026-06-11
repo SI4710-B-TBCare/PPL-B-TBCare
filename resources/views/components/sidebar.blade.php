@@ -18,23 +18,70 @@
     <hr class="sidebar-divider mt-3 mb-0">
     @endcan
     
+    {{-- HAPUS atau komentari blok ini (menu CF lama) --}}
+    {{--
     @can('diagnosa')    
     <x-nav-link 
-        text="Diagnosa" 
+        text="Prediksi TBC (Admin)" 
         icon="stethoscope" 
         url="{{ route('admin.diagnosa') }}"
         active="{{ request()->routeIs('admin.diagnosa') ? ' active' : '' }}"
     />
     @endcan
+    --}}
     
-    @can('riwayat-list')
+    {{-- Menu untuk role USER: prediksi ML --}}
+    @role('user')
+    <x-nav-link
+        text="Dashboard"
+        icon="tachometer-alt"
+        url="{{ route('users.dashboard') }}"
+        active="{{ request()->routeIs('users.dashboard') ? ' active' : '' }}"
+    />
+    <x-nav-link
+        text="Prediksi Risiko TBC"
+        icon="heartbeat"
+        url="{{ route('users.prediksi.create') }}"
+        active="{{ request()->routeIs('users.prediksi.create', 'users.prediksi.store') ? ' active' : '' }}"
+    />
+    <x-nav-link
+        text="Riwayat Prediksi Saya"
+        icon="history"
+        url="{{ route('users.prediksi.index') }}"
+        active="{{ request()->routeIs('users.prediksi.index', 'users.prediksi.show') ? ' active' : '' }}"
+    />
+    <x-nav-link
+        text="ChatBot TBC"
+        icon="robot"
+        url="{{ route('users.chatbot') }}"
+        active="{{ request()->routeIs('users.chatbot', 'users.chatbot.prediksi', 'users.chatbot.send', 'users.chatbot.reset') ? ' active' : '' }}"
+    />
+    <x-nav-link
+        text="Artikel TBCare"
+        icon="newspaper"
+        url="{{ route('users.artikel.index') }}"
+        active="{{ request()->routeIs('users.artikel.index', 'users.artikel.show') ? ' active' : '' }}"
+    />
+    @endrole
+
+    {{-- Menu untuk role ADMIN: log aktivitas prediksi ML --}}
+    @role('Admin')
+    <x-nav-link
+        text="Log Prediksi TBC"
+        icon="clipboard-list"
+        url="{{ route('admin.prediksi') }}"
+        active="{{ request()->routeIs('admin.prediksi') ? ' active' : '' }}"
+    />
+    @endrole
+    
+    <!-- @can('riwayat-list')
     <x-nav-link 
-        text="Riwayat Diagnosaaa" 
+        text="Riwayat Diagnosa" 
         icon="notes-medical" 
         url="{{ route('admin.riwayat.daftar') }}"
         active="{{ request()->routeIs('admin.riwayat.daftar') ? ' active' : '' }}"
     />
-    @endcan
+    @endcan -->
 
     @can('member-list')
     <hr class="sidebar-divider mt-3 mb-0">
@@ -60,8 +107,8 @@
     <x-nav-link 
         text="Daftar Artikel" 
         icon="th-list" 
-        url="{{ route('admin.artikel') }}"
-        active="{{ request()->routeIs('admin.artikel') ? ' active' : '' }}"
+        url="{{ route('admin.artikel.index') }}"
+        active="{{ request()->routeIs('admin.artikel.index') ? ' active' : '' }}"
     />
     @endcan
 
@@ -69,8 +116,8 @@
     <x-nav-link 
         text="Feedback" 
         icon="comment-dots" 
-        url="{{ route('admin.feedback') }}"
-        active="{{ request()->routeIs('admin.feedback') ? ' active' : '' }}"
+        url="{{ route('admin.feedback.index') }}"
+        active="{{ request()->routeIs('admin.feedback.index') ? ' active' : '' }}"
     />
     @endcan
 
@@ -78,8 +125,8 @@
     <x-nav-link 
         text="Monitoring" 
         icon="heartbeat" 
-        url="{{ route('admin.monitoring') }}"
-        active="{{ request()->routeIs('admin.monitoring') ? ' active' : '' }}"
+        url="{{ route('admin.monitoring.index') }}"
+        active="{{ request()->routeIs('admin.monitoring.index') ? ' active' : '' }}"
     />
     @endcan
 
@@ -91,6 +138,28 @@
         active="{{ request()->routeIs('admin.rules') ? ' active' : '' }}"
     />
     @endcan
+    
+    @if(auth()->user()->hasRole('Admin'))
+    <x-nav-link 
+        text="Forum" 
+        icon="comments" 
+        url="{{ route('admin.forum') }}"
+        active="{{ request()->routeIs('admin.forum*') ? ' active' : '' }}"
+    />
+    @else
+    <x-nav-link 
+        text="Feedback" 
+        icon="comment-dots" 
+        url="{{ route('users.feedback') }}"
+        active="{{ request()->routeIs('users.feedback*') ? ' active' : '' }}"
+    />
+    <x-nav-link 
+        text="Forum" 
+        icon="comments" 
+        url="{{ route('users.forum') }}"
+        active="{{ request()->routeIs('users.forum*') ? ' active' : '' }}"
+    />
+    @endif
     
     <hr class="sidebar-divider mb-0">
 

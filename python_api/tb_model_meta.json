@@ -1,0 +1,59 @@
+{
+  "features": [
+    "CO",
+    "NS",
+    "BD",
+    "FV",
+    "CP",
+    "SP",
+    "IS",
+    "LP",
+    "CH",
+    "LC",
+    "IR",
+    "LA",
+    "LE",
+    "LNE",
+    "SBP",
+    "BMI"
+  ],
+  "encoding": {
+    "severity": {
+      "mild": 0,
+      "moderate": 1,
+      "severe": 2
+    },
+    "sputum": {
+      "bloody": 0,
+      "colorless": 1,
+      "green": 2
+    }
+  },
+  "label": {
+    "0": "Risiko Rendah",
+    "1": "Risiko Tinggi"
+  },
+  "rules": {
+    "primary_features": [
+      "CO",
+      "FV",
+      "NS",
+      "SP"
+    ],
+    "secondary_features": [
+      "BD",
+      "CP",
+      "IS",
+      "LP",
+      "CH",
+      "LC",
+      "IR",
+      "LA",
+      "LE",
+      "LNE",
+      "SBP",
+      "BMI"
+    ],
+    "condition": "primary_present>=2 AND primary_severe>=1 OR total_score>=20"
+  }
+}

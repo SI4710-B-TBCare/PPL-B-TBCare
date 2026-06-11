@@ -6,9 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateActivityLogTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::connection(config('activitylog.database_connection'))->create(config('activitylog.table_name'), function (Blueprint $table) {
@@ -18,14 +15,13 @@ class CreateActivityLogTable extends Migration
             $table->nullableMorphs('subject', 'subject');
             $table->nullableMorphs('causer', 'causer');
             $table->json('properties')->nullable();
+            $table->uuid('batch_uuid')->nullable();
+            $table->string('event')->nullable();
             $table->timestamps();
             $table->index('log_name');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::connection(config('activitylog.database_connection'))->dropIfExists(config('activitylog.table_name'));

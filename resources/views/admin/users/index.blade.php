@@ -7,6 +7,14 @@
 	<x-card>
 		<x-slot name="title">All Member</x-slot>
 		<x-slot name="option">
+			<form class="form-inline mr-2" method="GET" action="{{ route('admin.member') }}">
+				<div class="input-group">
+					<input type="text" name="keyword" value="{{ request('keyword') }}" class="form-control" placeholder="Cari member...">
+					<div class="input-group-append">
+						<button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+					</div>
+				</div>
+			</form>
 			<a href="{{ route('admin.member.create') }}" class="btn btn-success">
 				<i class="fas fa-plus"></i>
 			</a>
