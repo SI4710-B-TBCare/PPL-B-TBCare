@@ -16,6 +16,11 @@ class FasilitasKesehatan extends Model
     protected $fillable = [
         'kode',
         'nama',
+        'jenis_fasilitas',
+        'alamat',
+        'kota',
+        'no_telepon',
+        'jam_operasional',
         'penyebab',
     ];
 

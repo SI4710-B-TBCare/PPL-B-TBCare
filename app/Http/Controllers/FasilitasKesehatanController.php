@@ -18,11 +18,45 @@ class FasilitasKesehatanController extends Controller
     /**
      * PBI #19 - Menampilkan daftar fasilitas penanganan TBC
      */
-    public function index()
+    public function index(Request $request)
     {
-        $fasilitasKesehatan = FasilitasKesehatan::paginate(10);
+        $query = FasilitasKesehatan::query();
 
-        return view('admin.fasilitasKesehatan.index', compact('fasilitasKesehatan'));
+        // Filter pencarian nama / kode
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('kode', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan jenis fasilitas (kategori)
+        if ($request->filled('jenis_fasilitas')) {
+            $query->where('jenis_fasilitas', $request->jenis_fasilitas);
+        }
+
+        // Filter berdasarkan kota
+        if ($request->filled('kota')) {
+            $query->where('kota', 'like', "%{$request->kota}%");
+        }
+
+        $fasilitasKesehatan = $query->paginate(10)->withQueryString();
+
+        // Data untuk dropdown filter
+        $daftarJenis = FasilitasKesehatan::select('jenis_fasilitas')
+            ->whereNotNull('jenis_fasilitas')
+            ->distinct()
+            ->orderBy('jenis_fasilitas')
+            ->pluck('jenis_fasilitas');
+
+        $daftarKota = FasilitasKesehatan::select('kota')
+            ->whereNotNull('kota')
+            ->distinct()
+            ->orderBy('kota')
+            ->pluck('kota');
+
+        return view('admin.fasilitasKesehatan.index', compact('fasilitasKesehatan', 'daftarJenis', 'daftarKota'));
     }
 
     /**
@@ -31,9 +65,14 @@ class FasilitasKesehatanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode'     => 'required|string|max:255',
-            'nama'     => 'required|string|max:255',
-            'penyebab' => 'required|string',
+            'kode'             => 'required|string|max:255',
+            'nama'             => 'required|string|max:255',
+            'penyebab'         => 'required|string',
+            'jenis_fasilitas'  => 'nullable|string|max:255',
+            'alamat'           => 'nullable|string',
+            'kota'             => 'nullable|string|max:255',
+            'no_telepon'       => 'nullable|string|max:50',
+            'jam_operasional'  => 'nullable|string|max:255',
         ]);
 
         FasilitasKesehatan::create($request->all());
@@ -57,10 +96,15 @@ class FasilitasKesehatanController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'id'       => 'required|exists:fasilitas_kesehatan,id',
-            'kode'     => 'required|string|max:255',
-            'nama'     => 'required|string|max:255',
-            'penyebab' => 'required|string',
+            'id'               => 'required|exists:fasilitas_kesehatan,id',
+            'kode'             => 'required|string|max:255',
+            'nama'             => 'required|string|max:255',
+            'penyebab'         => 'required|string',
+            'jenis_fasilitas'  => 'nullable|string|max:255',
+            'alamat'           => 'nullable|string',
+            'kota'             => 'nullable|string|max:255',
+            'no_telepon'       => 'nullable|string|max:50',
+            'jam_operasional'  => 'nullable|string|max:255',
         ]);
 
         $fasilitas = FasilitasKesehatan::findOrFail($request->id);

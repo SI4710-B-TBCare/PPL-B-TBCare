@@ -49,7 +49,7 @@
 
     @can('fasilitasKesehatan-list')
     <x-nav-link 
-        text="Daftar Fasilitas Kesehatan" 
+        text="Daftar Fasilitas Penanganan" 
         icon="th-list" 
         url="{{ route('admin.fasilitasKesehatan') }}"
         active="{{ request()->routeIs('admin.fasilitasKesehatan') ? ' active' : '' }}"
@@ -91,6 +91,23 @@
         active="{{ request()->routeIs('admin.rules') ? ' active' : '' }}"
     />
     @endcan
+
+    {{-- Link Data Pengguna: admin melihat semua, user biasa mengisi form --}}
+    @role('Admin')
+    <x-nav-link 
+        text="Data Pengguna" 
+        icon="address-card" 
+        url="{{ route('admin.dataPengguna.index') }}"
+        active="{{ request()->routeIs('admin.dataPengguna.index') ? ' active' : '' }}"
+    />
+    @else
+    <x-nav-link 
+        text="Data Saya" 
+        icon="address-card" 
+        url="{{ route('admin.dataPengguna.form') }}"
+        active="{{ request()->routeIs('admin.dataPengguna.form') ? ' active' : '' }}"
+    />
+    @endrole
     
     <hr class="sidebar-divider mb-0">
 

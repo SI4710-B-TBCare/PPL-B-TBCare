@@ -10,7 +10,8 @@ use App\Http\Controllers\{
 	FeedbackController,
 	MonitoringController,
 	RuleController,
-	UserController
+	UserController,
+	DataPenggunaController
 };
 
 Route::redirect('/', '/login');
@@ -72,6 +73,16 @@ Route::group([
 	// menu rules
 	Route::get('/rules/{id}', [RuleController::class, 'index'])->name('rules');
 	Route::post('/rules/{id}/update', [RuleController::class, 'update'])->name('rules.update');
+
+	// input data pengguna (user biasa)
+	Route::get('/data-saya', [DataPenggunaController::class, 'create'])->name('dataPengguna.form');
+	Route::post('/data-saya', [DataPenggunaController::class, 'store'])->name('dataPengguna.store');
+
+	// data pengguna - admin
+	Route::get('/data-pengguna', [DataPenggunaController::class, 'index'])->name('dataPengguna.index');
+	Route::get('/data-pengguna/json', [DataPenggunaController::class, 'json'])->name('dataPengguna.json');
+	Route::post('/data-pengguna/update', [DataPenggunaController::class, 'update'])->name('dataPengguna.update');
+	Route::post('/data-pengguna/{dataPengguna}/destroy', [DataPenggunaController::class, 'destroy'])->name('dataPengguna.destroy');
 	
 	
 	// Profile menu
