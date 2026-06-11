@@ -90,25 +90,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                       @forelse($riwayatList as $row)
-    <tr>
-        <td>
-            {{ $row->risk_level }}
-            <b>
-                (<span class="text-danger">
-                    {{ number_format($row->risk_percentage, 2) }}%
-                </span>)
-            </b>
-        </td>
-        <td>{{ $row->created_at->format('d M Y') }}</td>
-    </tr>
-@empty
-    <tr>
-        <td colspan="2" class="text-center text-muted">
-            {{ $search ? 'Tidak ada riwayat dengan kata kunci "'.$search.'"' : 'Belum ada riwayat prediksi' }}
-        </td>
-    </tr>
-@endforelse
+                        @forelse($riwayatList as $row)
+                            <tr style="cursor:pointer" onclick="highlightGrafik('{{ $row->created_at->format('Y-m-d') }}')">
+                                <td>
+                                    {{ $row->risk_level }}
+                                    <b>
+                                        (<span class="text-danger">
+                                            {{ number_format($row->risk_percentage, 2) }}%
+                                        </span>)
+                                    </b>
+                                </td>
+                                <td>{{ $row->created_at->format('d M Y') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">
+                                    {{ $search ? 'Tidak ada riwayat dengan kata kunci "'.$search.'"' : 'Belum ada riwayat prediksi' }}
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </x-card>
@@ -119,7 +119,7 @@
         <script>
             @if(!$search)
             var ctx = document.getElementById("grafikTBC");
-            new Chart(ctx, {
+            var myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: @json($grafik->pluck('tanggal')),
@@ -147,6 +147,23 @@
                     legend: { display: false },
                 }
             });
+
+            function highlightGrafik(tanggal) {
+                var labels = myChart.data.labels;
+                var idx = labels.indexOf(tanggal);
+                if (idx !== -1) {
+                    myChart.data.datasets[0].pointRadius = labels.map(function(_, i) {
+                        return i === idx ? 8 : 3;
+                    });
+                    myChart.data.datasets[0].pointBackgroundColor = labels.map(function(_, i) {
+                        return i === idx ? 'rgba(255, 99, 132, 1)' : 'rgba(78, 115, 223, 1)';
+                    });
+                    myChart.update();
+
+                    // scroll ke grafik
+                    document.getElementById('grafikTBC').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
             @endif
         </script>
     </x-slot>
