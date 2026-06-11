@@ -27,11 +27,12 @@ Dokumen ini menjelaskan langkah instalasi, konfigurasi, menjalankan aplikasi, pe
 
 Pastikan perangkat Anda telah memenuhi kebutuhan berikut:
 
+* Laragon atau XAMPP
 * PHP **8.2 atau versi yang lebih baru**
+* MySQL **8.0 atau versi yang lebih baru**
+* Python **3.10 atau versi yang lebih baru**
 * Composer
-* Python
 * Pip
-* Database yang sesuai dengan konfigurasi proyek
 
 ---
 
