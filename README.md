@@ -1,5 +1,13 @@
 # TBCare
 
+## Daftar Isi
+
+- [Deskripsi](#deskripsi)
+- [Prasyarat](#prasyarat)
+- [Instalasi dan Setup Aplikasi](#instalasi-dan-menjalankan-aplikasi)
+- [Penggunaan Sistem TBCare](#penggunaan-sistem-tbcare)
+- [Troubleshooting](#troubleshooting)
+
 ## Deskripsi
 
 TBCare adalah aplikasi untuk membantu pengguna dalam mengetahui potensi risiko terkena penyakit TBC sedini mungkin melalui fitur prediksi TBC berbasis Machine Learning menggunakan algoritma Random Forest. 
@@ -75,7 +83,7 @@ Jalankan perintah berikut:
 composer install
 ```
 
-Apabila muncul error saat proses instalasi dependency, silakan akses bagian **Troubleshooting** pada dokumen ini.
+Apabila muncul error saat proses instalasi dependency, silakan akses bagian [**Troubleshooting**](#troubleshooting) pada dokumen ini.
 
 ---
 
@@ -173,13 +181,28 @@ Password : user123
 
 ---
 
+## Daftar Panduan Penggunaan Fitur
+
+Berikut adalah daftar panduan penggunaan fitur-fitur yang ada pada sistem TBCare:
+
+* [Panduan Penggunaan Fitur Dashboard](#)
+* [Panduan Penggunaan Fitur Prediksi TBC](docs/PANDUAN_PREDIKSI_TBC.md)
+* [Panduan Penggunaan Fitur ChatBot](docs/PANDUAN_CHATBOT.md)
+* [Panduan Penggunaan Fitur Artikel TBC](#)
+* [Panduan Penggunaan Fitur Forum TBC](#)
+* [Panduan Penggunaan Fitur Feedback](#)
+* [Panduan Penggunaan Fitur Monitoring TBC](#)
+* [Panduan Penggunaan Fitur Fasilitas Kesehatan TBC](#)
+
+---
+
 ## Eksplorasi Fitur
 
-Silakan mengeksplorasi sistem sesuai fitur dan Product Backlog Item (PBI) masing-masing anggota.
+Silakan mengeksplorasi sistem sesuai fitur dan Product Backlog Item (PBI) milik masing-masing anggota.
 
-Detail PBI dapat dilihat pada dokumen berikut:
+Untuk detail PBI dapat dilihat pada dokumen berikut:
 
-https://docs.google.com/document/d/1ZsZ37hMKsKj47ynR45LTphjufLCvZSW5/edit
+[KELOMPOKB_SPRINTPLANNING2_TBCare.docx](https://docs.google.com/document/d/1ZsZ37hMKsKj47ynR45LTphjufLCvZSW5/edit)
 
 ---
 
