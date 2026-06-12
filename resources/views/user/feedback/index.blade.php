@@ -24,15 +24,17 @@
 					<td>{{ $row->email }}</td>
 					<td>{{ Str::limit($row->pesan, 50) }}</td>
 					<td>
+						@if($row->user_id == auth()->id())
 						<div class="d-flex justify-between-space">
 							<div>
 								<button class="btn btn-primary btn-sm edit" data-id="{{ $row->id }}"><i class="fas fa-edit"></i></button>
 							</div>
-							<form action="{{ route('user.feedback.destroy', $row->id) }}" method="post">
+							<form action="{{ route('users.feedback.destroy', $row->id) }}" method="post">
 								@csrf
 								<button type="submit" class="btn btn-danger btn-sm ml-1 delete"><i class="fas fa-trash"></i></button>
 							</form>
 						</div>
+						@endif
 					</td>
 				</tr>
 				@empty
@@ -48,7 +50,7 @@
 	</x-card>
 
 	<x-modal title="Tambahkan Feedback" id="feedback">
-		<form action="{{ route('user.feedback.store') }}" method="POST">
+		<form action="{{ route('users.feedback.store') }}" method="POST">
 			@csrf
 			<div class="form-group">
 				<label for="nama">Nama</label>
@@ -69,7 +71,7 @@
 	</x-modal>
 
 	<x-modal title="Edit Feedback" id="edit-feedback">
-		<form action="{{ route('user.feedback.update') }}" method="POST">
+		<form action="{{ route('users.feedback.update') }}" method="POST">
 			@csrf
 			<input type="hidden" name="id">
 			<div class="form-group">
@@ -118,7 +120,7 @@
 			$('.edit').click(function() {
 				const id = $(this).data('id')
 
-				$.get(`{{ route('user.feedback.json') }}?id=${id}`, function(res) {
+				$.get(`{{ route('users.feedback.json') }}?id=${id}`, function(res) {
 					$('#edit-feedback input[name="id"]').val(res.id)
 					$('#edit-feedback input[name="nama"]').val(res.nama)
 					$('#edit-feedback input[name="email"]').val(res.email)
