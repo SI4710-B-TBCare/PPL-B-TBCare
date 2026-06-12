@@ -24,9 +24,9 @@ class DatabaseSeeder extends Seeder
             CreateFeedbackSeeder::class,
             CreateMonitoringSeeder::class,
             UserSeeder::class,
+            ForumSeeder::class,
+            ForumCommentSeeder::class,
             // CreateRiwayatSeeder::class,
-            // ForumSeeder::class,
-            // ForumCommentSeeder::class,
         ]);
     }
 }
