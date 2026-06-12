@@ -23,6 +23,7 @@
 			<thead>
 				<th>Name</th>
 				<th>Username</th>
+				<th>Lokasi</th>
 				<th>Role</th>
 				<th>Action</th>
 			</thead>
@@ -31,6 +32,7 @@
 				<tr>
 					<td>{{ $user->name }}</td>
 					<td>{{ $user->username }}</td>
+					<td>{{ $user->provinsi }}</td>
 					<td>
 					@if(!empty($user->getRoleNames()))
 				        @foreach($user->getRoleNames() as $v)
