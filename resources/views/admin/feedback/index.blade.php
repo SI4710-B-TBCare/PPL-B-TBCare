@@ -7,7 +7,7 @@
 	<x-card>
 		<table class="table table-hover border">
 			<thead>
-				<th>Author</th>
+				<!-- <th>Author</th> -->
 				<th>Nama</th>
 				<th>Email</th>
 				<th>Pesan</th>
@@ -16,7 +16,7 @@
 			<tbody>
 				@forelse($feedback as $row)
 				<tr>
-					<td>{{ $row->user ? $row->user->name : '-' }}</td>
+					<!-- <td>{{ $row->user ? $row->user->name : '-' }}</td> -->
 					<td><b>{{ $row->nama }}</b></td>
 					<td>{{ $row->email }}</td>
 					<td>{{ Str::limit($row->pesan, 50) }}</td>
