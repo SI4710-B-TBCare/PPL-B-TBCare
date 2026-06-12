@@ -10,7 +10,12 @@ class FeedbackController extends Controller
     public function index()
     {
         $feedback = Feedback::latest()->paginate(10);
-        return view('admin.feedback.index', compact('feedback'));
+        
+        if (auth()->user()->hasRole('Admin')) {
+            return view('admin.feedback.index', compact('feedback'));
+        }
+
+        return view('user.feedback.index', compact('feedback'));
     }
 
     public function store(Request $request)
@@ -22,6 +27,7 @@ class FeedbackController extends Controller
         ]);
 
         Feedback::create([
+            'user_id' => auth()->id(),
             'nama' => $request->nama,
             'email' => $request->email,
             'pesan' => $request->pesan,
@@ -44,7 +50,13 @@ class FeedbackController extends Controller
             'pesan' => 'required|string',
         ]);
 
-        Feedback::where('id', $request->id)->update([
+        $feedback = Feedback::findOrFail($request->id);
+
+        if (!auth()->user()->hasRole('Admin') && $feedback->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $feedback->update([
             'nama' => $request->nama,
             'email' => $request->email,
             'pesan' => $request->pesan,
@@ -55,7 +67,13 @@ class FeedbackController extends Controller
 
     public function destroy($id)
     {
-        Feedback::find($id)->delete();
+        $feedback = Feedback::findOrFail($id);
+
+        if (!auth()->user()->hasRole('Admin') && $feedback->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $feedback->delete();
         return back()->with('success', 'Data feedback berhasil dihapus');
     }
 }
