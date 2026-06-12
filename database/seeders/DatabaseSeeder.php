@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             PermissionTableSeeder::class,
             CreateAdminUserSeeder::class,
             CreatePenyakitSeeder::class,
-            CreateGejalaSeeder::class,
+            // CreateGejalaSeeder::class,
             ArtikelSeeder::class,
             // CreateFasilitasKesehatanSeeder::class,
             // GejalaPenyakitSeeder::class,
@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ForumSeeder::class,
             ForumCommentSeeder::class,
+            // CreateRiwayatSeeder::class,
         ]);
     }
 }

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-user-app-layout>
     <x-slot name="title">Detail Artikel: {{ $artikel->nama }}</x-slot>
 
     <div class="card shadow mb-4">
@@ -29,4 +29,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-user-app-layout>

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-user-app-layout>
 	<x-slot name="title">Detail Forum</x-slot>
 	<x-alert-error></x-alert-error>
 	@if(session()->has('success'))
@@ -84,4 +84,4 @@
 			})
 		</script>
 	</x-slot>
-</x-app-layout>
+</x-user-app-layout>

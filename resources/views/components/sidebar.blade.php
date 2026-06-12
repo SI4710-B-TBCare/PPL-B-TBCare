@@ -33,6 +33,12 @@
     {{-- Menu untuk role USER: prediksi ML --}}
     @role('user')
     <x-nav-link
+        text="Dashboard"
+        icon="tachometer-alt"
+        url="{{ route('users.dashboard') }}"
+        active="{{ request()->routeIs('users.dashboard') ? ' active' : '' }}"
+    />
+    <x-nav-link
         text="Prediksi Risiko TBC"
         icon="heartbeat"
         url="{{ route('users.prediksi.create') }}"
@@ -124,14 +130,14 @@
     />
     @endcan
 
-    @can('rules-list')
+    <!-- @can('rules-list')
     <x-nav-link 
         text="Basis Rules" 
         icon="briefcase-medical" 
         url="{{ route('admin.rules', 1) }}"
         active="{{ request()->routeIs('admin.rules') ? ' active' : '' }}"
     />
-    @endcan
+    @endcan -->
     
     @if(auth()->user()->hasRole('Admin'))
     <x-nav-link 

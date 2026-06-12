@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class UserSeeder extends Seeder
 {
@@ -16,16 +15,60 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::firstOrCreate(
-            ['username' => 'johni'],
-            [
-                'name'     => 'Johni',
-                'password' => bcrypt('john123')
-            ]
-        );
-
         $role = Role::firstOrCreate(['name' => 'user']);
 
-        $user->assignRole($role);
+        $users = [
+            [
+                'username' => 'user',
+                'name' => 'Contoh User',
+                'password' => bcrypt('user123'),
+                'provinsi' => 'Jawa Barat',
+                'kota' => 'Bandung',
+            ],
+            [
+                'username' => 'johni',
+                'name' => 'Johni',
+                'password' => bcrypt('john123'),
+                'provinsi' => 'Jawa Barat',
+                'kota' => 'Bandung',
+            ],
+            [
+                'username' => 'adi',
+                'name' => 'Adi',
+                'password' => bcrypt('adi123'),
+                'provinsi' => 'Jawa Tengah',
+                'kota' => 'Semarang',
+            ],
+            [
+                'username' => 'siti',
+                'name' => 'Siti',
+                'password' => bcrypt('siti123'),
+                'provinsi' => 'DKI Jakarta',
+                'kota' => 'Jakarta Selatan',
+            ],
+            [
+                'username' => 'budi',
+                'name' => 'Budi',
+                'password' => bcrypt('budi123'),
+                'provinsi' => 'Jawa Timur',
+                'kota' => 'Surabaya',
+            ],
+            [
+                'username' => 'rita',
+                'name' => 'Rita',
+                'password' => bcrypt('rita123'),
+                'provinsi' => 'Bali',
+                'kota' => 'Denpasar',
+            ],
+        ];
+
+        foreach ($users as $data) {
+            $user = User::updateOrCreate(
+                ['username' => $data['username']],
+                $data
+            );
+
+            $user->assignRole($role);
+        }
     }
 }
