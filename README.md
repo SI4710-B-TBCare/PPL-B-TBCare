@@ -110,9 +110,7 @@ dengan port database yang digunakan pada perangkat Anda.
 
 ### 5. Konfigurasi GROQ API Key
 
-Konfigurasi `GROQ_API_KEY` telah tersedia secara default pada lingkungan pengembangan tim.
-
-Apabila `GROQ_API_KEY` yang digunakan telah mencapai limit, silakan mengganti nilainya pada file `.env` menggunakan API key Groq yang Anda miliki.
+Buatlah akun dan ambil API key pada link https://console.groq.com, kemudian ganti nilai `GROQ_API_KEY` pada file `.env` menggunakan API key Groq yang Anda miliki.
 
 Contoh:
 
