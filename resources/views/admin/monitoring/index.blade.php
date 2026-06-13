@@ -1,455 +1,252 @@
 <x-app-layout>
-	<x-slot name="title">Daftar Monitoring</x-slot>
 
-	<x-alert-error></x-alert-error>
+    <x-slot name="title">
+        Daftar Monitoring
+    </x-slot>
 
-	@if(session()->has('success'))
-	<x-alert type="success" message="{{ session()->get('success') }}" />
-	@endif
+    <x-alert-error></x-alert-error>
 
-	<x-card>
+    @if(session()->has('success'))
+        <x-alert
+            type="success"
+            message="{{ session()->get('success') }}" />
+    @endif
 
-		<x-slot name="option">
-			<div class="btn btn-success add">
-				<i class="fas fa-plus mr-1"></i>
-				Tambahkan Monitoring
-			</div>
-		</x-slot>
+    <x-card>
 
-		<table class="table table-hover border">
-			<thead>
-				<tr>
-					<th>User</th>
-					<th>Nama</th>
-					<th>Tanggal</th>
-					<th>Hasil Lab</th>
-					<th>File Hasil Lab</th>
-					<th>Keterangan</th>
-					<th>Status</th>
-					<th width="150">Aksi</th>
-				</tr>
-			</thead>
+        <table class="table table-hover border">
 
-			<tbody>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Nama</th>
+                    <th>Tanggal</th>
+                    <th>Hasil Lab</th>
+                    <th>File Hasil Lab</th>
+                    <th>Keterangan</th>
+                    <th>Status</th>
+                    <th width="100">Aksi</th>
+                </tr>
+            </thead>
 
-			@forelse($monitoring as $row)
+            <tbody>
 
-				<tr>
+            @forelse($monitoring as $row)
 
-					<td>
-						{{ $row->user->name ?? '-' }}
-					</td>
+                <tr>
 
-					<td>
-						<b>{{ $row->nama }}</b>
-					</td>
+                    <td>
+                        {{ $row->user->name ?? '-' }}
+                    </td>
 
-					<td>
-						{{ $row->tanggal }}
-					</td>
+                    <td>
+                        <b>{{ $row->nama }}</b>
+                    </td>
 
-					<td>
-						{{ $row->hasil_lab }}
-					</td>
+                    <td>
+                        {{ $row->tanggal }}
+                    </td>
 
-					<td>
+                    <td>
+                        {{ $row->hasil_lab }}
+                    </td>
 
-						@if($row->file_hasil_lab)
+                    <td>
 
-							<a
-								href="{{ asset('storage/'.$row->file_hasil_lab) }}"
-								target="_blank"
-								class="btn btn-info btn-sm">
+                        @if($row->file_hasil_lab)
 
-								Lihat File
+                            <a
+                                href="{{ asset('storage/'.$row->file_hasil_lab) }}"
+                                target="_blank"
+                                class="btn btn-info btn-sm">
 
-							</a>
+                                Lihat File
 
-						@else
+                            </a>
 
-							-
+                        @else
 
-						@endif
+                            -
 
-					</td>
+                        @endif
 
-					<td>
-						{{ Str::limit($row->keterangan,50) }}
-					</td>
+                    </td>
 
-					<td>
+                    <td>
+                        {{ Str::limit($row->keterangan,50) }}
+                    </td>
 
-						<span class="badge badge-{{ $row->status == 'sembuh' ? 'success' : 'warning' }}">
+                    <td>
 
-							{{ ucfirst($row->status) }}
+                        <span class="badge badge-{{ $row->status == 'sembuh' ? 'success' : 'warning' }}">
 
-						</span>
+                            {{ ucfirst($row->status) }}
 
-					</td>
+                        </span>
 
-					<td>
+                    </td>
 
-						<div class="d-flex">
+                    <td>
 
-    <button
-        class="btn btn-primary btn-sm edit"
-        data-id="{{ $row->id }}">
+                        <button
+                            class="btn btn-primary btn-sm edit"
+                            data-id="{{ $row->id }}">
 
-        <i class="fas fa-edit"></i>
+                            <i class="fas fa-edit"></i>
 
-    </button>
+                        </button>
 
-    <button
-        type="button"
-        class="btn btn-info btn-sm ml-1 perkembangan"
-        data-id="{{ $row->id }}"
-        data-nama="{{ $row->nama }}">
+                    </td>
 
-        <i class="fas fa-notes-medical"></i>
+                </tr>
 
-    </button>
+            @empty
 
-    <form
-        action="{{ route('admin.monitoring.destroy',$row->id) }}"
-        method="POST">
+                <tr>
+                    <td colspan="8" class="text-center">
+                        No Data
+                    </td>
+                </tr>
 
-        @csrf
+            @endforelse
 
-        <button
-            type="submit"
-            class="btn btn-danger btn-sm ml-1 delete">
+            </tbody>
 
-            <i class="fas fa-trash"></i>
+        </table>
 
-        </button>
+        <div class="mt-2">
+            {{ $monitoring->links() }}
+        </div>
 
-    </form>
+    </x-card>
 
-</div>
 
-								<button
-									type="submit"
-									class="btn btn-danger btn-sm ml-1 delete">
+    {{-- MODAL EDIT STATUS MONITORING --}}
 
-									<i class="fas fa-trash"></i>
+    <x-modal
+        title="Edit Monitoring"
+        id="edit-monitoring">
 
-								</button>
+        <form
+            action="{{ route('admin.monitoring.update') }}"
+            method="POST"
+            enctype="multipart/form-data">
 
-							</form>
-
-						</div>
-
-					</td>
-
-				</tr>
-
-			@empty
-
-				<tr>
-					<td colspan="8" class="text-center">
-						No Data
-					</td>
-				</tr>
-
-			@endforelse
-
-			</tbody>
-
-		</table>
-
-		<div class="mt-2">
-			{{ $monitoring->links() }}
-		</div>
-
-	</x-card>
-
-	{{-- MODAL TAMBAH --}}
-
-	<x-modal title="Tambahkan Monitoring" id="monitoring">
-
-		<form
-			action="{{ route('admin.monitoring.store') }}"
-			method="POST"
-			enctype="multipart/form-data">
-
-			@csrf
-
-			<div class="form-group">
-				<label>Nama Pasien</label>
-				<input
-					type="text"
-					class="form-control"
-					name="nama"
-					required>
-			</div>
-
-			<div class="form-group">
-				<label>Tanggal</label>
-				<input
-					type="date"
-					class="form-control"
-					name="tanggal"
-					required>
-			</div>
-
-			<div class="form-group">
-				<label>Hasil Lab</label>
-				<input
-					type="text"
-					class="form-control"
-					name="hasil_lab"
-					required>
-			</div>
-
-			<div class="form-group">
-				<label>Upload Hasil Lab</label>
-				<input
-					type="file"
-					class="form-control"
-					name="file_hasil_lab"
-					accept=".pdf,.jpg,.jpeg,.png">
-			</div>
-
-			<div class="form-group">
-				<label>Keterangan</label>
-				<textarea
-					class="form-control"
-					name="keterangan"></textarea>
-			</div>
-
-			<div class="form-group">
-				<label>Status</label>
-
-				<select
-					class="form-control"
-					name="status"
-					required>
-
-					<option value="">
-						-- Pilih Status --
-					</option>
-
-					<option value="proses">
-						Proses
-					</option>
-
-					<option value="sembuh">
-						Sembuh
-					</option>
-
-				</select>
-
-			</div>
-
-			<button class="btn btn-primary">
-				Simpan
-			</button>
-
-		</form>
-
-	</x-modal>
-
-	{{-- MODAL EDIT --}}
-
-	<x-modal title="Edit Monitoring" id="edit-monitoring">
-
-		<form
-			action="{{ route('admin.monitoring.update') }}"
-			method="POST"
-			enctype="multipart/form-data">
-
-			@csrf
-
-			<input type="hidden" name="id">
-
-			<div class="form-group">
-				<label>Nama Pasien</label>
-				<input
-					type="text"
-					class="form-control"
-					name="nama">
-			</div>
-
-			<div class="form-group">
-				<label>Tanggal</label>
-				<input
-					type="date"
-					class="form-control"
-					name="tanggal">
-			</div>
-
-			<div class="form-group">
-				<label>Hasil Lab</label>
-				<input
-					type="text"
-					class="form-control"
-					name="hasil_lab">
-			</div>
-
-			<div class="form-group">
-				<label>Upload Hasil Lab Baru</label>
-				<input
-					type="file"
-					class="form-control"
-					name="file_hasil_lab"
-					accept=".pdf,.jpg,.jpeg,.png">
-			</div>
-
-			<div class="form-group">
-				<label>Keterangan</label>
-				<textarea
-					class="form-control"
-					name="keterangan"></textarea>
-			</div>
-
-			<div class="form-group">
-				<label>Status</label>
-
-				<select
-					class="form-control"
-					name="status">
-
-					<option value="proses">
-						Proses
-					</option>
-
-					<option value="sembuh">
-						Sembuh
-					</option>
-
-				</select>
-
-			</div>
-
-			<button class="btn btn-primary">
-				Update
-			</button>
-
-		</form>
-
-	</x-modal>
-
-	{{-- MODAL PERKEMBANGAN KESEHATAN --}}
-
-<x-modal
-    title="Catatan Perkembangan Kesehatan"
-    id="perkembangan-monitoring">
-
-    <form
-        action="{{ route('admin.perkembangan.store') }}"
-        method="POST">
-
-        @csrf
-
-        <input
-            type="hidden"
-            name="monitoring_id"
-            id="monitoring_id">
-
-        <div class="form-group">
-            <label>Tanggal Catatan</label>
+            @csrf
 
             <input
-                type="date"
-                class="form-control"
-                name="tanggal"
-                required>
-        </div>
+                type="hidden"
+                name="id">
 
-        <div class="form-group">
-            <label>Catatan Perkembangan</label>
+            <div class="form-group">
 
-            <textarea
-                class="form-control"
-                name="catatan"
-                rows="5"
-                required></textarea>
-        </div>
+                <label>Nama Pasien</label>
 
-        <button
-            type="submit"
-            class="btn btn-success">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="nama"
+                    readonly>
 
-            Simpan Catatan
+            </div>
 
-        </button>
+            <div class="form-group">
 
-    </form>
+                <label>Tanggal</label>
 
-</x-modal>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="tanggal"
+                    readonly>
 
-	<x-slot name="script">
+            </div>
 
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <div class="form-group">
 
-	<script>
+                <label>Hasil Lab</label>
 
-	$('.add').click(function(){
-		$('#monitoring').modal('show')
-	})
+                <input
+                    type="text"
+                    class="form-control"
+                    name="hasil_lab"
+                    readonly>
 
-	$('.delete').click(function(e){
+            </div>
 
-		e.preventDefault()
+            <div class="form-group">
 
-		Swal.fire({
+                <label>Keterangan</label>
 
-			title: 'Hapus data?',
+                <textarea
+                    class="form-control"
+                    name="keterangan"
+                    rows="4"
+                    readonly></textarea>
 
-			icon: 'warning',
+            </div>
 
-			showCancelButton: true,
+            <div class="form-group">
 
-			confirmButtonColor: '#d33',
+                <label>Status Monitoring</label>
 
-			confirmButtonText: 'Ya'
+                <select
+                    class="form-control"
+                    name="status">
 
-		}).then((result)=>{
+                    <option value="proses">
+                        Proses
+                    </option>
 
-			if(result.isConfirmed){
+                    <option value="sembuh">
+                        Sembuh
+                    </option>
 
-				$(this).parent().submit()
+                </select>
 
-			}
+            </div>
 
-		})
+            <button
+                type="submit"
+                class="btn btn-primary">
 
-	})
+                Update Status
 
-	$('.edit').click(function(){
+            </button>
 
-		const id = $(this).data('id')
+        </form>
 
-		$.get(
-			`{{ route('admin.monitoring.json') }}?id=${id}`,
-			function(res){
+    </x-modal>
 
-				$('#edit-monitoring input[name="id"]').val(res.id)
-				$('#edit-monitoring input[name="nama"]').val(res.nama)
-				$('#edit-monitoring input[name="tanggal"]').val(res.tanggal)
-				$('#edit-monitoring input[name="hasil_lab"]').val(res.hasil_lab)
-				$('#edit-monitoring textarea[name="keterangan"]').val(res.keterangan)
-				$('#edit-monitoring select[name="status"]').val(res.status)
 
-				$('#edit-monitoring').modal('show')
+    <x-slot name="script">
 
-	$('.perkembangan').click(function(){
+        <script>
 
-    	const monitoring_id = $(this).data('id')
+            $('.edit').click(function(){
 
-    	$('#monitoring_id').val(monitoring_id)
+                const id = $(this).data('id')
 
-    	$('#perkembangan-monitoring')
-        .modal('show')
+                $.get(
+                    `{{ route('admin.monitoring.json') }}?id=${id}`,
+                    function(res){
 
-	})			
-			}
-		)
+                        $('#edit-monitoring input[name="id"]').val(res.id)
+                        $('#edit-monitoring input[name="nama"]').val(res.nama)
+                        $('#edit-monitoring input[name="tanggal"]').val(res.tanggal)
+                        $('#edit-monitoring input[name="hasil_lab"]').val(res.hasil_lab)
+                        $('#edit-monitoring textarea[name="keterangan"]').val(res.keterangan)
+                        $('#edit-monitoring select[name="status"]').val(res.status)
 
-	})
+                        $('#edit-monitoring').modal('show')
 
-	</script>
+                    }
+                )
 
-	</x-slot>
+            })
+
+        </script>
+
+    </x-slot>
 
 </x-app-layout>

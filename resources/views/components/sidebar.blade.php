@@ -18,18 +18,6 @@
     <hr class="sidebar-divider mt-3 mb-0">
     @endcan
     
-    {{-- HAPUS atau komentari blok ini (menu CF lama) --}}
-    {{--
-    @can('diagnosa')    
-    <x-nav-link 
-        text="Prediksi TBC (Admin)" 
-        icon="stethoscope" 
-        url="{{ route('admin.diagnosa') }}"
-        active="{{ request()->routeIs('admin.diagnosa') ? ' active' : '' }}"
-    />
-    @endcan
-    --}}
-    
     {{-- Menu untuk role USER: prediksi ML --}}
     @role('user')
     <x-nav-link
@@ -57,6 +45,24 @@
         active="{{ request()->routeIs('users.chatbot', 'users.chatbot.prediksi', 'users.chatbot.send', 'users.chatbot.reset') ? ' active' : '' }}"
     />
     <x-nav-link
+        text="Monitoring Saya"
+        icon="heartbeat"
+        url="{{ route('users.monitoring.history') }}"
+        active="{{ request()->routeIs('users.monitoring.*') ? ' active' : '' }}"
+    />
+    <x-nav-link
+        text="Perkembangan Kesehatan"
+        icon="notes-medical"
+        url="{{ route('users.perkembangan') }}"
+        active="{{ request()->routeIs('users.perkembangan*') ? ' active' : '' }}"
+    />
+    <x-nav-link
+        text="Jadwal Pemeriksaan"
+        icon="calendar-alt"
+        url="{{ route('users.jadwal') }}"
+        active="{{ request()->routeIs('users.jadwal*') ? ' active' : '' }}"
+    />
+    <x-nav-link
         text="Artikel TBCare"
         icon="newspaper"
         url="{{ route('users.artikel.index') }}"
@@ -73,15 +79,6 @@
         active="{{ request()->routeIs('admin.prediksi') ? ' active' : '' }}"
     />
     @endrole
-    
-    <!-- @can('riwayat-list')
-    <x-nav-link 
-        text="Riwayat Diagnosa" 
-        icon="notes-medical" 
-        url="{{ route('admin.riwayat.daftar') }}"
-        active="{{ request()->routeIs('admin.riwayat.daftar') ? ' active' : '' }}"
-    />
-    @endcan -->
 
     @can('member-list')
     <hr class="sidebar-divider mt-3 mb-0">

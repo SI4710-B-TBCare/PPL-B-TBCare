@@ -102,7 +102,7 @@
                             </button>
 
                             <form
-                                action="{{ route('admin.jadwal.destroy',$row->id) }}"
+                                action="{{ route('users.jadwal.destroy',$row->id) }}"
                                 method="POST">
 
                                 @csrf
@@ -156,7 +156,7 @@
         id="jadwal">
 
         <form
-            action="{{ route('admin.jadwal.store') }}"
+            action="{{ route('users.jadwal.store') }}"
             method="POST">
 
             @csrf
@@ -242,7 +242,7 @@
         id="edit-jadwal">
 
         <form
-            action="{{ route('admin.jadwal.update') }}"
+            action="{{ route('users.jadwal.update') }}"
             method="POST">
 
             @csrf

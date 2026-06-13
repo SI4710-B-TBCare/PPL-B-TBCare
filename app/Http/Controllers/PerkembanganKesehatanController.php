@@ -12,25 +12,39 @@ class PerkembanganKesehatanController extends Controller
     /**
      * Menampilkan daftar perkembangan kesehatan
      */
-    public function index($monitoring_id)
-    {
-        $monitoring = Monitoring::findOrFail($monitoring_id);
+    public function index()
+{
+    $monitoring = Monitoring::where(
+        'user_id',
+        Auth::id()
+    )
+    ->latest()
+    ->first();
 
-        $perkembangan = PerkembanganKesehatan::where(
-                'monitoring_id',
-                $monitoring_id
-            )
-            ->orderBy('tanggal', 'desc')
-            ->get();
-
-        return view(
-            'admin.monitoring.perkembangan',
-            compact(
-                'monitoring',
-                'perkembangan'
-            )
-        );
+    if (!$monitoring) {
+        return redirect()
+            ->route('users.monitoring.history')
+            ->with(
+                'error',
+                'Silakan tambahkan data monitoring terlebih dahulu.'
+            );
     }
+
+    $perkembangan = PerkembanganKesehatan::where(
+        'monitoring_id',
+        $monitoring->id
+    )
+    ->orderBy('tanggal', 'desc')
+    ->get();
+
+    return view(
+        'users.monitoring.perkembangan',
+        compact(
+            'monitoring',
+            'perkembangan'
+        )
+    );
+}
 
     /**
      * Simpan catatan perkembangan kesehatan
