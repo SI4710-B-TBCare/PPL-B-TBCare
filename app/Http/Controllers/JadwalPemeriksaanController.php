@@ -87,4 +87,12 @@ class JadwalPemeriksaanController extends Controller
             'Jadwal berhasil dihapus'
         );
     }
+
+    public function json()
+    {
+        $data = JadwalPemeriksaan::find(request('id'));
+
+        return response()->json($data);
+    }
+    
 }

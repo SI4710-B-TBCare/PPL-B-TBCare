@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Monitoring;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,10 +11,15 @@ class MonitoringController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:monitoring-list', ['only' => ['index', 'history']]);
-        $this->middleware('permission:monitoring-create', ['only' => ['store']]);
-        $this->middleware('permission:monitoring-edit', ['only' => ['update', 'json']]);
-        $this->middleware('permission:monitoring-delete', ['only' => ['destroy']]);
+        $this->middleware(
+        'permission:monitoring-list',
+        ['only' => ['index']]
+    );
+
+        $this->middleware(
+        'permission:monitoring-edit',
+        ['only' => ['update', 'json']]
+    );
     }
 
     /**
@@ -39,7 +45,6 @@ class MonitoringController extends Controller
 
         return view('admin.monitoring.history', compact('monitoring'));
     }
-
     /**
      * Simpan monitoring baru
      */
@@ -131,6 +136,18 @@ class MonitoringController extends Controller
             'Data monitoring berhasil diubah'
         );
     }
+
+    public function download($id)
+{
+    $monitoring = Monitoring::findOrFail($id);
+
+    if (!$monitoring->file_hasil_lab) {
+        return back()->with('error', 'File tidak ditemukan');
+    }
+
+    return Storage::disk('public')
+        ->download($monitoring->file_hasil_lab);
+}
 
     /**
      * Hapus monitoring
