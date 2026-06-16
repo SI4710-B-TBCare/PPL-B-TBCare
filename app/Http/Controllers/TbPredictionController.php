@@ -134,6 +134,7 @@ class TbPredictionController extends Controller
         $labels  = TbPrediction::featureLabels();
         $options = TbPrediction::severityOptions();
         $sputum  = TbPrediction::sputumOptions();
+        $fourLevel = TbPrediction::fourLevelOptions(); 
 
         // Rekomendasi Artikel berdasarkan Kategori dan Keyword Judul
         $categories = [];
@@ -173,7 +174,7 @@ class TbPredictionController extends Controller
         $topArticles = $recommendedArticles->take(3);
         $moreArticles = $recommendedArticles->slice(3);
 
-        return view('users.prediksi.show', compact('tbPrediction', 'labels', 'options', 'sputum', 'topArticles', 'moreArticles'));
+        return view('users.prediksi.show', compact('tbPrediction', 'labels', 'options', 'sputum', 'topArticles', 'moreArticles', 'fourLevel'));
     }
 
     /**

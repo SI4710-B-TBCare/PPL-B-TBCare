@@ -1,58 +1,70 @@
+"""
+app_v2.py
+=========
+Flask API versi baru untuk model risiko TBC.
+
+Perubahan dari app.py lama:
+- Memuat 'tb_model_v2.pkl' (RandomForestRegressor) alih-alih
+  'tb_model.pkl' (RandomForestClassifier).
+- Menggunakan model.predict() yang langsung mengembalikan skor 0-100,
+  alih-alih model.predict_proba()[0][1] * 100.
+- Hasil di-clamp ke rentang [0, 100] untuk berjaga-jaga kalau regressor
+  sedikit overshoot di luar rentang training.
+
+Jangan lupa:
+1. Jalankan train_tb_model_v2.py dulu di folder yang sama dengan file
+   'tuberculosis_dataset.csv' untuk menghasilkan 'tb_model_v2.pkl'.
+2. Copy 'tb_model_v2.pkl' ke folder yang sama dengan app_v2.py ini.
+3. Matikan proses Flask lama (cek `lsof -i:5000` kalau perlu) sebelum
+   menjalankan yang baru, supaya tidak ada instance lama yang masih
+   memuat model lama di memori.
+"""
+
 from flask import Flask, request, jsonify
 import pickle
 import pandas as pd
 import os
-import pandas as pd
-import numpy as np
-import joblib
-import sklearn
 
 app = Flask(__name__)
 
-# Load model saat API pertama kali dijalankan
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'tb_model.pkl')
 model = pickle.load(open(MODEL_PATH, 'rb'))
 
-FEATURE_COLS = ['CO', 'NS', 'BD', 'FV', 'CP', 'SP', 'IS', 'LP', 'CH', 'LC', 'IR', 'LA', 'LE', 'LNE', 'SBP', 'BMI']
+FEATURE_COLS = ['CO', 'NS', 'BD', 'FV', 'CP', 'SP', 'IS', 'LP', 'CH', 'LC',
+                'IR', 'LA', 'LE', 'LNE', 'SBP', 'BMI']
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
         data = request.get_json()
 
-        # Validasi: semua fitur harus ada
         missing = [f for f in FEATURE_COLS if f not in data]
         if missing:
             return jsonify({'error': f'Fitur kurang: {missing}'}), 422
 
-        # Validasi nilai: harus 0, 1, atau 2 (SP dan CO bisa 0-2, IS/LE bisa 0-3)
         for f in FEATURE_COLS:
             if not isinstance(data[f], int) or data[f] < 0 or data[f] > 3:
                 return jsonify({'error': f'Nilai tidak valid untuk {f}: {data[f]}'}), 422
 
-        # Buat DataFrame agar nama kolom sesuai dengan saat training
         df_input = pd.DataFrame([{f: data[f] for f in FEATURE_COLS}])
 
-        # Prediksi probabilitas
-        prob = model.predict_proba(df_input)[0][1]
-        percentage = round(prob * 100, 2)
+        # Regressor memprediksi skor risiko 0-100 secara langsung
+        raw_score = float(model.predict(df_input)[0])
+        percentage = round(max(0.0, min(100.0, raw_score)), 2)
 
-        # Tentukan kategori risiko
         if percentage < 30:
-            risk_level = 'Rendah'
-            risk_color = 'green'
+            risk_level, risk_color = 'Rendah', 'green'
         elif percentage < 60:
-            risk_level = 'Sedang'
-            risk_color = 'yellow'
+            risk_level, risk_color = 'Sedang', 'yellow'
         else:
-            risk_level = 'Tinggi'
-            risk_color = 'red'
+            risk_level, risk_color = 'Tinggi', 'red'
 
         return jsonify({
-            'probability'  : percentage,
-            'risk_level'   : risk_level,
-            'risk_color'   : risk_color,
-            'status'       : 'success'
+            'probability': percentage,
+            'risk_level': risk_level,
+            'risk_color': risk_color,
+            'status': 'success'
         })
 
     except Exception as e:
@@ -61,7 +73,7 @@ def predict():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'ok', 'model': 'tb_random_forest'})
+    return jsonify({'status': 'ok', 'model': 'tb_random_forest_regressor'})
 
 
 if __name__ == '__main__':

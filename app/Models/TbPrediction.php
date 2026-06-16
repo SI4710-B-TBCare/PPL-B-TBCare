@@ -68,6 +68,16 @@ class TbPrediction extends Model
         ];
     }
 
+    public static function fourLevelOptions(): array
+    {
+        return [
+            0 => 'Tidak ada',
+            1 => 'Ringan',
+            2 => 'Sedang',
+            3 => 'Berat',
+        ];
+    }
+
     /**
      * Bangun teks konteks prediksi untuk dikirim ke model AI.
      */

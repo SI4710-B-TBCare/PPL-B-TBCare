@@ -42,9 +42,10 @@
                                 {{ $label }}
                                 @php
                                     $val = $tbPrediction->$key;
-                                    $valLabel = '';
                                     if ($key === 'SP') {
                                         $valLabel = $sputum[$val] ?? $val;
+                                    } elseif (in_array($key, ['IS', 'LE'])) {
+                                        $valLabel = $fourLevel[$val] ?? $val;
                                     } else {
                                         $valLabel = $options[$val] ?? $val;
                                     }
@@ -74,73 +75,84 @@
             </div>
 
             <!-- Rekomendasi Artikel -->
-            @if(isset($topArticles) && $topArticles->count() > 0)
-            <div class="card mt-4 mb-4">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="fas fa-book-open mr-1"></i> Rekomendasi Artikel Untuk Anda</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach($topArticles as $artikel)
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100">
-                                    @if($artikel->gambar)
-                                        <img src="{{ asset('storage/' . $artikel->gambar) }}" class="card-img-top" alt="{{ $artikel->nama }}" style="height: 150px; object-fit: cover;">
-                                    @else
-                                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
-                                            <i class="fas fa-image text-muted fa-3x"></i>
-                                        </div>
-                                    @endif
-                                    <div class="card-body d-flex flex-column">
-                                        <h6 class="card-title font-weight-bold">{{ $artikel->nama }}</h6>
-                                        <p class="card-text small text-muted text-truncate" style="max-height: 40px; overflow: hidden;">
-                                            {{ Str::limit(strip_tags($artikel->isi), 80) }}
-                                        </p>
-                                        <div class="mt-auto text-right">
-                                            <a href="{{ route('users.artikel.show', $artikel->id) }}" class="btn btn-sm btn-outline-primary">Baca Artikel</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+            @if (isset($topArticles) && $topArticles->count() > 0)
+                <div class="card mt-4 mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-book-open mr-1"></i> Rekomendasi Artikel Untuk Anda</h5>
                     </div>
-
-                    @if(isset($moreArticles) && $moreArticles->count() > 0)
-                    <div class="text-center mt-3">
-                        <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#moreArticlesCollapse" aria-expanded="false" aria-controls="moreArticlesCollapse">
-                            Lihat Selengkapnya <i class="fas fa-chevron-down ml-1"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="collapse mt-4" id="moreArticlesCollapse">
+                    <div class="card-body">
                         <div class="row">
-                            @foreach($moreArticles as $artikel)
+                            @foreach ($topArticles as $artikel)
                                 <div class="col-md-4 mb-3">
                                     <div class="card h-100">
-                                        @if($artikel->gambar)
-                                            <img src="{{ asset('storage/' . $artikel->gambar) }}" class="card-img-top" alt="{{ $artikel->nama }}" style="height: 150px; object-fit: cover;">
+                                        @if ($artikel->gambar)
+                                            <img src="{{ asset('storage/' . $artikel->gambar) }}" class="card-img-top"
+                                                alt="{{ $artikel->nama }}" style="height: 150px; object-fit: cover;">
                                         @else
-                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                                                style="height: 150px;">
                                                 <i class="fas fa-image text-muted fa-3x"></i>
                                             </div>
                                         @endif
                                         <div class="card-body d-flex flex-column">
                                             <h6 class="card-title font-weight-bold">{{ $artikel->nama }}</h6>
-                                            <p class="card-text small text-muted text-truncate" style="max-height: 40px; overflow: hidden;">
+                                            <p class="card-text small text-muted text-truncate"
+                                                style="max-height: 40px; overflow: hidden;">
                                                 {{ Str::limit(strip_tags($artikel->isi), 80) }}
                                             </p>
                                             <div class="mt-auto text-right">
-                                                <a href="{{ route('users.artikel.show', $artikel->id) }}" class="btn btn-sm btn-outline-primary">Baca Artikel</a>
+                                                <a href="{{ route('users.artikel.show', $artikel->id) }}"
+                                                    class="btn btn-sm btn-outline-primary">Baca Artikel</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
+
+                        @if (isset($moreArticles) && $moreArticles->count() > 0)
+                            <div class="text-center mt-3">
+                                <button class="btn btn-outline-success" type="button" data-toggle="collapse"
+                                    data-target="#moreArticlesCollapse" aria-expanded="false"
+                                    aria-controls="moreArticlesCollapse">
+                                    Lihat Selengkapnya <i class="fas fa-chevron-down ml-1"></i>
+                                </button>
+                            </div>
+
+                            <div class="collapse mt-4" id="moreArticlesCollapse">
+                                <div class="row">
+                                    @foreach ($moreArticles as $artikel)
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card h-100">
+                                                @if ($artikel->gambar)
+                                                    <img src="{{ asset('storage/' . $artikel->gambar) }}"
+                                                        class="card-img-top" alt="{{ $artikel->nama }}"
+                                                        style="height: 150px; object-fit: cover;">
+                                                @else
+                                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                                                        style="height: 150px;">
+                                                        <i class="fas fa-image text-muted fa-3x"></i>
+                                                    </div>
+                                                @endif
+                                                <div class="card-body d-flex flex-column">
+                                                    <h6 class="card-title font-weight-bold">{{ $artikel->nama }}</h6>
+                                                    <p class="card-text small text-muted text-truncate"
+                                                        style="max-height: 40px; overflow: hidden;">
+                                                        {{ Str::limit(strip_tags($artikel->isi), 80) }}
+                                                    </p>
+                                                    <div class="mt-auto text-right">
+                                                        <a href="{{ route('users.artikel.show', $artikel->id) }}"
+                                                            class="btn btn-sm btn-outline-primary">Baca Artikel</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
-                    @endif
                 </div>
-            </div>
             @endif
 
             <div class="card mt-3">
@@ -149,7 +161,8 @@
                     <a href="{{ route('users.prediksi.index') }}" class="btn btn-secondary mr-2 mb-2">
                         <i class="fas fa-history mr-1"></i> Riwayat Saya
                     </a>
-                    <a href="{{ route('users.chatbot.prediksi', $tbPrediction->id) }}" class="btn btn-success mr-2 mb-2">
+                    <a href="{{ route('users.chatbot.prediksi', $tbPrediction->id) }}"
+                        class="btn btn-success mr-2 mb-2">
                         <i class="fas fa-comments mr-1"></i> Tanya Lebih Lanjut di Chatbot
                     </a>
                     <a href="{{ route('users.prediksi.create') }}" class="btn btn-primary mb-2">
@@ -161,42 +174,43 @@
     </section>
 
     <x-slot name="script">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const predictionId = {{ $tbPrediction->id }};
-            const aiContent = document.getElementById('ai-content');
-            const aiLoading = document.getElementById('ai-loading');
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const predictionId = {{ $tbPrediction->id }};
+                const aiContent = document.getElementById('ai-content');
+                const aiLoading = document.getElementById('ai-loading');
 
-            fetch(`/users/prediksi/${predictionId}/auto-recommendation`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Gagal memuat rekomendasi');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.reply) {
-                    aiContent.innerHTML = marked.parse(data.reply);
-                } else if (data.error) {
-                    aiContent.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
-                }
-            })
-            .catch(error => {
-                aiContent.innerHTML = `<div class="alert alert-warning">Maaf, saat ini sistem AI kami sedang sibuk memproses permintaan. Kami menyarankan Anda untuk berkonsultasi langsung dengan tenaga medis berdasarkan hasil prediksi Anda.</div>`;
-            })
-            .finally(() => {
-                aiLoading.style.display = 'none';
-                aiContent.style.display = 'block';
+                fetch(`/users/prediksi/${predictionId}/auto-recommendation`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Gagal memuat rekomendasi');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.reply) {
+                            aiContent.innerHTML = marked.parse(data.reply);
+                        } else if (data.error) {
+                            aiContent.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                        }
+                    })
+                    .catch(error => {
+                        aiContent.innerHTML =
+                            `<div class="alert alert-warning">Maaf, saat ini sistem AI kami sedang sibuk memproses permintaan. Kami menyarankan Anda untuk berkonsultasi langsung dengan tenaga medis berdasarkan hasil prediksi Anda.</div>`;
+                    })
+                    .finally(() => {
+                        aiLoading.style.display = 'none';
+                        aiContent.style.display = 'block';
+                    });
             });
-        });
-    </script>
+        </script>
     </x-slot>
 
-</x-app-layout>
+    </x-app-layout>
