@@ -19,7 +19,7 @@ class CreateAdminUserSeeder extends Seeder
         $user = User::firstOrCreate(
             ['username' => 'admin'],
             [
-                'name' => 'FikriDev', 
+                'name' => 'Admin', 
                 'password' => bcrypt('admin123')
             ]
         );

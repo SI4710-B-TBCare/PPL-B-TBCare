@@ -143,7 +143,7 @@ class TbPredictionController extends Controller
             $categories = ['Pencegahan', 'Umum'];
             $keywords = ['pencegahan', 'edukasi', 'gaya hidup sehat', 'menjaga imun', 'mencegah TBC', 'tuberkulosis'];
         } elseif ($tbPrediction->risk_level === 'Sedang') {
-            $categories = ['Gejala', 'Penanganan', 'Umum'];
+            $categories = ['Gejala', 'Penanganan'];
             $keywords = ['gejala', 'pemeriksaan', 'deteksi dini', 'konsultasi', 'tanda TBC', 'kapan ke dokter'];
         } elseif ($tbPrediction->risk_level === 'Tinggi') {
             $categories = ['Pengobatan', 'Tindakan Segera'];

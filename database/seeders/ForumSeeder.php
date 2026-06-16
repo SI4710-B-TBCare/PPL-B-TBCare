@@ -20,9 +20,15 @@ class ForumSeeder extends Seeder
 
         if ($user) {
             Forum::create([
-                'user_id' => $user->id,
+                'user_id' => 4,
                 'judul' => 'Bagaimana cara mencegah TBC?',
                 'konten' => 'Saya baru saja membaca artikel tentang TBC dan ingin tahu lebih lanjut mengenai langkah-langkah pencegahannya secara efektif di lingkungan yang padat.'
+            ]);
+
+            Forum::create([
+                'user_id' => 3,
+                'judul' => 'Bagaimana pengalaman pelayanan TBC di Rumah Sakit XYZ?',
+                'konten' => 'Saya baru saja mendapat informasi tidak enak mengenai pelayanan di Rumah Sakit XYZ.'
             ]);
 
             Forum::create([
