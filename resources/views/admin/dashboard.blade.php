@@ -159,68 +159,46 @@
                 </x-slot>
 
                 <div class="table-responsive">
-
                     <table class="table table-hover border">
 
                         <thead>
                             <tr>
                                 <th>ID</th>
-
-                                @role('Admin')
-                                    <td>{{ $row->user->name ?? '-' }}</td>
-                                @endrole
-
-                                <th>Penyakit Terdiagnosa</th>
-                                <th>Tanggal</th>
+                                <th>Nama User</th>
+                                <th>Tingkat Risiko</th>
+                                <th>Waktu</th>
                             </tr>
                         </thead>
 
                         <tbody>
-
                             @forelse($riwayatList as $row)
-
                                 <tr>
                                     <td>{{ $row->id }}</td>
-
-                                    @role('Admin')
-                                        <td>{{ $row->nama }}</td>
-                                    @endrole
-
+                                    <td>{{ $row->user->name ?? '-' }}</td>
                                     <td>
                                         {{ $row->risk_level }}
-
                                         <b>
                                             (<span class="text-danger">
                                                 {{ number_format($row->risk_percentage, 2) }}%
                                             </span>)
                                         </b>
                                     </td>
-
                                     <td>
                                         {{ $row->created_at->format('d M Y, H:i:s') }}
                                     </td>
                                 </tr>
-
                             @empty
-
                                 <tr>
                                     <td colspan="4" class="text-center">
                                         No Data
                                     </td>
                                 </tr>
-
                             @endforelse
-
                         </tbody>
-
                     </table>
-
                 </div>
-
             </x-card>
-
         </div>
-
     </section>
 
     <x-slot name="script">

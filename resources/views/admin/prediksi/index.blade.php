@@ -1,10 +1,10 @@
 <x-app-layout>
-    <x-slot name="title">Log Prediksi TBC</x-slot>
+    <x-slot name="title">Log Prediksi Risiko TBC</x-slot>
 
     <section class="row">
         <div class="col-md-12">
             <x-card>
-                <x-slot name="title">Log Aktivitas Prediksi</x-slot>
+                <x-slot name="title">Detail Log Aktivitas</x-slot>
 
                 <p class="text-muted mb-3">
                     <i class="fas fa-info-circle mr-1"></i>
@@ -18,8 +18,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nama User</th>
-                                <th>Email</th>
-                                <th>Waktu Prediksi</th>
+                                <th>Tingkat Risiko</th>
+                                <th>Waktu</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,7 +27,15 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->user->name ?? '-' }}</td>
-                                    <td>{{ $row->user->email ?? '-' }}</td>
+                                    <td>
+                                        {{ $row->risk_level }}
+
+                                        <b>
+                                            (<span class="text-danger">
+                                                {{ number_format($row->risk_percentage, 2) }}%
+                                            </span>)
+                                        </b>
+                                    </td>
                                     <td>{{ $row->created_at->format('d M Y, H:i:s') }}</td>
                                 </tr>
                             @empty
